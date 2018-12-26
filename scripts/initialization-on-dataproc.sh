@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# from https://cloud.google.com/dataproc/docs/concepts/compute/gpus
+# refer to https://cloud.google.com/dataproc/docs/concepts/compute/gpus
+# should be pushed to gs://seqslab-deepvariant/scripts/
+
 set -e -x
 
 function update_apt_get() {

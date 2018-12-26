@@ -87,7 +87,7 @@ else
   DEEPVARIANT=deepvariant
   mkdir -p ${HOME}
   cd ${HOME}
-  git clone https://github.com/AnomeGAP/deepvariant.git
+  git clone https://github.com/atgenomix/deepvariant.git
   cd ${DEEPVARIANT}
   HOME="${HOME}" DV_GPU_BUILD=1 DV_INSTALL_GPU_DRIVERS=1 bash ./build-prereq.sh
   HOME="${HOME}" PATH="${PATH}:${HOME}/bin" bash ./build_release_binaries.sh

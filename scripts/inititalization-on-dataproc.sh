@@ -92,10 +92,12 @@ else
   BUCKET="gs://${DEEPVARIANT}"
   BIN_VERSION="0.7.0"
   MODEL_VERSION="0.7.0"
-  MODEL_NAME="DeepVariant-inception_v3-${MODEL_VERSION}+data-wgs_standard"
-  MODEL_BUCKET="${BUCKET}/models/DeepVariant/${MODEL_VERSION}/${MODEL_NAME}"
-  gsutil cp -R "${MODEL_BUCKET}" .
-  MODEL="${HOME}/${DEEPVARIANT}/${MODEL_NAME}/model.ckpt"
-fi
+  WGS_MODEL_NAME="DeepVariant-inception_v3-${MODEL_VERSION}+data-wgs_standard"
+  WGS_MODEL_BUCKET="${BUCKET}/models/DeepVariant/${MODEL_VERSION}/${WGS_MODEL_NAME}"
+  gsutil cp -R "${WGS_MODEL_BUCKET}" .
+  WES_MODEL_NAME="DeepVariant-inception_v3-${MODEL_VERSION}+data-wes_standard"
+  WES_MODEL_BUCKET="${BUCKET}/models/DeepVariant/${MODEL_VERSION}/${WES_MODEL_NAME}"
+  gsutil cp -R "${WES_MODEL_BUCKET}" .
+ fi
 
 echo "[info] setup_drivers.sh done"

@@ -12,14 +12,14 @@ and Hadoop service offered on Google Cloud Platform.
 
 ```
 gcloud beta dataproc clusters create deepvariant-on-spark \
-    --subnet default --zone us-west1-b \
-    --master-machine-type n1-highmem-8 --master-boot-disk-size 1024 \
-    --num-workers 5 --worker-machine-type n1-highmem-16 \
-    --worker-boot-disk-size 384 \
-    --worker-accelerator type=nvidia-tesla-p100,count=1 \
-    --num-worker-local-ssds 1 --image-version 1.3-deb9  \
-    --initialization-actions gs://seqslab-deepvariant/scripts/initialization-on-dataproc.sh  \
-    --initialization-action-timeout 20m
+  --subnet default --zone us-west1-b \
+  --master-machine-type n1-highmem-8 --master-boot-disk-size 1024 \
+  --num-workers 5 --worker-machine-type n1-highmem-16 \
+  --worker-boot-disk-size 384 \
+  --worker-accelerator type=nvidia-tesla-p100,count=1 \
+  --num-worker-local-ssds 1 --image-version 1.3-deb9  \
+  --initialization-actions gs://seqslab-deepvariant/scripts/initialization-on-dataproc.sh  \
+  --initialization-action-timeout 20m
 ```
 
 
@@ -69,6 +69,8 @@ FINAL_OUTPUT_VCF="${OUTPUT_DIR}/output.vcf.gz"
 
 ```
 
+For evaluation, please check ${OUTPUT_DIR} and verify those output files
+and their size.
 
 ```
 atgenomix@deepvariant-on-spark-w-1:~$ ls -al ${OUTPUT_DIR}

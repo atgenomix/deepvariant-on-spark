@@ -23,3 +23,35 @@ Apache Spark for pipeline acceleration.
 ### Quick start and Case studies
 
 *   [DeepVariant-on-Spark quick start on Google Cloud vid DataProc](docs/deepvariant-on-spark-quick-start-dataproc.md)
+
+
+## Contributing
+
+Interested in contributing? See [CONTRIBUTING](CONTRIBUTING.md).
+
+## License
+
+DeepVariant-on-Spark is licensed under the terms of the
+[Apache 2.0 License](LICENSE).
+
+## Acknowledgements
+
+DeepVariant-on-Spark happily makes use of many open source packages.
+We'd like to specifically call out a few key ones:
+
+*   [DeepVariant - an analysis pipeline that uses a deep neural network
+    to call genetic variants from next-generation DNA sequencing
+    data](https://github.com/google/deepvariant)
+
+*   [Adam -  a genomics analysis platform with specialized file formats
+    built using Apache Avro, Apache Spark and
+    Parquet.](https://github.com/bigdatagenomics/adam)
+
+
+We thank all of the developers and contributors to these packages for their
+work.
+
+
+## Disclaimer
+
+*   This is not an official Atgenomix product.

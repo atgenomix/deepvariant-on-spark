@@ -104,6 +104,6 @@ else
   WES_MODEL_NAME="DeepVariant-inception_v3-${MODEL_VERSION}+data-wes_standard"
   WES_MODEL_BUCKET="${BUCKET}/models/DeepVariant/${MODEL_VERSION}/${WES_MODEL_NAME}"
   gsutil cp -R "${WES_MODEL_BUCKET}" .
- fi
+fi
 
 echo "[info] setup_drivers.sh done"

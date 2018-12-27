@@ -82,6 +82,10 @@ function is_master() {
 # Restart YARN daemons to pick up new group without restarting nodes.
 if is_master ; then
   systemctl restart hadoop-yarn-resourcemanager
+  # ansible installation
+  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+  apt-get update
+  apt-get install ansible -y
 else
   systemctl restart hadoop-yarn-nodemanager
   HOME=/usr/local

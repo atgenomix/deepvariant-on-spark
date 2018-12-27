@@ -37,21 +37,25 @@ if (lspci | grep -q NVIDIA); then
   # Without --no-install-recommends this takes a very long time.
   apt-get install -y -t stretch-backports --no-install-recommends \
     nvidia-cuda-toolkit nvidia-kernel-common nvidia-driver nvidia-smi
+fi
 
-  # Create a system wide NVBLAS config
-  # See http://docs.nvidia.com/cuda/nvblas/
-  NVBLAS_CONFIG_FILE=/etc/nvidia/nvblas.conf
-  cat << EOF >> ${NVBLAS_CONFIG_FILE}
-  # Insert here the CPU BLAS fallback library of your choice.
-  # The standard libblas.so.3 defaults to OpenBLAS, which does not have the
-  # requisite CBLAS API.
-  NVBLAS_CPU_BLAS_LIB /usr/lib/libblas/libblas.so
+# Create a system wide NVBLAS config
+# See http://docs.nvidia.com/cuda/nvblas/
+NVBLAS_CONFIG_FILE=/etc/nvidia/nvblas.conf
 
-  # Use all GPUs
-  NVBLAS_GPU_LIST ALL
+cat << EOF >> ${NVBLAS_CONFIG_FILE}
+# Insert here the CPU BLAS fallback library of your choice.
+# The standard libblas.so.3 defaults to OpenBLAS, which does not have the
+# requisite CBLAS API.
+NVBLAS_CPU_BLAS_LIB /usr/lib/libblas/libblas.so
 
-  # Add more configuration here.
-  EOF
+# Use all GPUs
+NVBLAS_GPU_LIST ALL
+
+# Add more configuration here.
+EOF
+
+if (lspci | grep -q NVIDIA); then
   echo "NVBLAS_CONFIG_FILE=${NVBLAS_CONFIG_FILE}" >> /etc/environment
 
   # Rebooting during an initialization action is not recommended, so just

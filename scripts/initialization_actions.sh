@@ -41,6 +41,7 @@ fi
 
 # Create a system wide NVBLAS config
 # See http://docs.nvidia.com/cuda/nvblas/
+mkdir -p /etc/nvidia/
 NVBLAS_CONFIG_FILE=/etc/nvidia/nvblas.conf
 
 cat << EOF >> ${NVBLAS_CONFIG_FILE}

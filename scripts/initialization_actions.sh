@@ -56,6 +56,15 @@ NVBLAS_GPU_LIST ALL
 # Add more configuration here.
 EOF
 
+function is_master() {
+  local role="$(/usr/share/google/get_metadata_value attributes/dataproc-role)"
+  if [[ "$role" == 'Master' ]] ; then
+    true
+  else
+    false
+  fi
+}
+
 if (lspci | grep -q NVIDIA); then
   echo "NVBLAS_CONFIG_FILE=${NVBLAS_CONFIG_FILE}" >> /etc/environment
 
@@ -68,26 +77,20 @@ if (lspci | grep -q NVIDIA); then
   modprobe nvidia-drm
   modprobe nvidia-uvm
   modprobe drm
+  # Restart YARN daemons to pick up new group without restarting nodes.
+  if is_master ; then
+    systemctl restart hadoop-yarn-resourcemanager
+  else
+    systemctl restart hadoop-yarn-nodemanager
+  fi
 fi
 
-function is_master() {
-  local role="$(/usr/share/google/get_metadata_value attributes/dataproc-role)"
-  if [[ "$role" == 'Master' ]] ; then
-    true
-  else
-    false
-  fi
-}
-
-# Restart YARN daemons to pick up new group without restarting nodes.
 if is_master ; then
-  systemctl restart hadoop-yarn-resourcemanager
   # ansible installation
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
   apt-get update
   apt-get install ansible -y
 else
-  systemctl restart hadoop-yarn-nodemanager
   HOME=/usr/local
   PATH="$PATH:${HOME}/bin"
   DEEPVARIANT=deepvariant

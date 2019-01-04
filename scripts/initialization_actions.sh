@@ -61,6 +61,10 @@ if (lspci | grep -q NVIDIA); then
   # dynamically load kernel modules. If you want to run an X server, it is
   # recommended that you schedule a reboot to occur after the initialization
   # action finishes.
+  # In pure CPU cluster, it will occur the following errors:
+  # modprobe: ERROR: could not insert 'nvidia_current': No such device
+  # modprobe: ERROR: could not insert 'nvidia_current': No such device
+  # modprobe: ERROR: ../libkmod/libkmod-module.c:977 command_do() Error running install command for nvidia
   modprobe -r nouveau
   modprobe nvidia-current
   modprobe nvidia-drm

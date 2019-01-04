@@ -11,25 +11,66 @@ and Hadoop service offered on Google Cloud Platform.
 ## Launch Cluster
 
 ```
-gcloud beta dataproc clusters create deepvariant-on-spark \
-  --subnet default --zone us-west1-b \
-  --master-machine-type n1-highmem-8 --master-boot-disk-size 1024 \
-  --num-workers 5 --worker-machine-type n1-highmem-16 \
-  --worker-boot-disk-size 384 \
-  --worker-accelerator type=nvidia-tesla-p100,count=1 \
-  --num-worker-local-ssds 1 --image-version 1.2.59-deb9 \
-  --initialization-actions gs://seqslab-deepvariant/scripts/initialization-on-dataproc.sh  \
-  --initialization-action-timeout 20m
+ gcloud beta dataproc clusters create my-deepvariant-on-spark \
+ --subnet default --zone us-west1-b \
+ --image-version 1.2.59-deb9 \
+ --initialization-actions gs://seqslab-deepvariant/scripts/initialization-on-dataproc.sh \
+ --initialization-action-timeout 20m
 ```
-
 
 ## Delete Cluster
 
 ```
-gcloud beta dataproc clusters delete deepvariant-on-spark
+gcloud beta dataproc clusters delete my-deepvariant-on-spark
 ```
 
-## Simple Test Case
+## Check environment
+
+DeepVariant will be installed into each worker node. You can login the
+terminal of the first worker via Google Cloud Platform or the following
+command:
+
+```
+gcloud compute ssh --ssh-flag="-A" my-deepvariant-on-spark-w-0 --zone="us-west1-b"
+```
+
+### Verify DeepVariant Package
+
+DeepVariant will be installed in /usr/local/deepvariant, so you can check
+whether the following subfolders are existed in the folder or not.
+```
+user@my-deepvariant-on-spark-w-0:~$ ls -al /usr/local/deepvariant/
+lrwxrwxrwx  1 root staff  121 Jan  4 05:43 bazel-bin -> /usr/local/.cache/bazel/_bazel_root/64dab1e556632dd3bc1768095a19236c/execroot/com_google_deepvariant/bazel-out/k8-opt/bin
+drwxr-sr-x  2 root staff 4096 Jan  4 05:50 DeepVariant-inception_v3-0.7.0+data-wes_standard
+drwxr-sr-x  2 root staff 4096 Jan  4 05:50 DeepVariant-inception_v3-0.7.0+data-wgs_standard
+```
+
+The models of DeepVariant comprises WGS and WES
+
+```
+user@my-deepvariant-on-spark-w-0:~$ ls -al /usr/local/deepvariant/DeepVariant-inception_v3-0.7.0+data-wgs_standard
+-rw-r--r--  1 root staff 348681272 Jan  4 05:50 model.ckpt.data-00000-of-00001
+-rw-r--r--  1 root staff     18496 Jan  4 05:50 model.ckpt.index
+-rw-r--r--  1 root staff  31106596 Jan  4 05:50 model.ckpt.meta
+```
+
+```
+user@my-deepvariant-on-spark-w-0:~$ ls -al /usr/local/deepvariant/DeepVariant-inception_v3-0.7.0+data-wes_standard
+-rw-r--r--  1 root staff 348681272 Jan  4 05:50 model.ckpt.data-00000-of-00001
+-rw-r--r--  1 root staff     18473 Jan  4 05:50 model.ckpt.index
+-rw-r--r--  1 root staff  31118992 Jan  4 05:50 model.ckpt.meta
+```
+
+```
+user@my-deepvariant-on-spark-w-0:~$ ls -al /usr/local/deepvariant/bazel-bin/deepvariant/
+-r-xr-xr-x 1 root staff 5874931 Jan  4 05:50 call_variants
+-r-xr-xr-x 1 root staff 9807273 Jan  4 05:50 make_examples
+-r-xr-xr-x 1 root staff 7839862 Jan  4 05:50 postprocess_variants
+```
+
+If the above files are existed, DeepVariant is installed successfully.
+
+### A simple test case
 
 Please login one of worker node and enter the following commands.
 
@@ -58,8 +99,7 @@ FINAL_OUTPUT_VCF="${OUTPUT_DIR}/output.vcf.gz"
 /usr/local/deepvariant/bazel-bin/deepvariant/call_variants \
   --outfile "${CALL_VARIANTS_OUTPUT}" \
   --examples "${OUTPUT_DIR}/examples.tfrecord.gz" \
-  --execution_hardware="seqslab_gpu" \
-  --percentage_gpu_memory=16 \
+  --execution_hardware="seqslab" \
   --checkpoint "${MODEL}"
 
 /usr/local/deepvariant/bazel-bin/deepvariant/postprocess_variants \
@@ -73,9 +113,9 @@ For evaluation, please check ${OUTPUT_DIR} and verify those output files
 and their size.
 
 ```
-atgenomix@deepvariant-on-spark-w-1:~$ ls -al ${OUTPUT_DIR}
--rw-r--r-- 1     4123 Dec 26 08:54 call_variants_output.tfrecord.gz
--rw-r--r-- 1   531797 Dec 26 08:54 examples.tfrecord.gz
--rw-r--r-- 1   154744 Dec 26 08:54 examples.tfrecord.gz.run_info.pbtxt
--rw-r--r-- 1     2209 Dec 26 09:03 output.vcf.gz
+user@my-deepvariant-on-spark-w-1:~$ ls -al ${OUTPUT_DIR}
+-rw-r--r-- 1 user user   4132 Jan  4 06:57 call_variants_output.tfrecord.gz
+-rw-r--r-- 1 user user 532000 Jan  4 06:56 examples.tfrecord.gz
+-rw-r--r-- 1 user user 154742 Jan  4 06:56 examples.tfrecord.gz.run_info.pbtxt
+-rw-r--r-- 1 user user   2207 Jan  4 06:57 output.vcf.gz
 ```

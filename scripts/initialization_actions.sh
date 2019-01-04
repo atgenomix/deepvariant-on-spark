@@ -118,7 +118,7 @@ if is_master ; then
   git clone https://github.com/atgenomix/deepvariant-on-spark.git
   apt-get install python-pip -y
   pip install jinja2
-  cd deepvariant-on-spark/ && python host_gen.py
+  cd deepvariant-on-spark/ansible && python host_gen.py
 
 else
   HOME=/usr/local

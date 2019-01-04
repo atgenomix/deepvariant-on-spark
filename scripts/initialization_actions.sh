@@ -17,27 +17,25 @@ function update_apt_get() {
 # Detect NVIDIA GPU
 update_apt_get
 apt-get install -y pciutils
-if (lspci | grep -q NVIDIA); then
-  # Add non-free Debian 9 Stretch packages.
-  # See https://www.debian.org/distrib/packages#note
-  for type in deb deb-src; do
-    for distro in stretch stretch-backports; do
-      for component in contrib non-free; do
-        echo "${type} http://deb.debian.org/debian/ ${distro} ${component}" \
-            >> /etc/apt/sources.list.d/non-free.list
-      done
+# Add non-free Debian 9 Stretch packages.
+# See https://www.debian.org/distrib/packages#note
+for type in deb deb-src; do
+  for distro in stretch stretch-backports; do
+    for component in contrib non-free; do
+      echo "${type} http://deb.debian.org/debian/ ${distro} ${component}" \
+          >> /etc/apt/sources.list.d/non-free.list
     done
   done
-  apt-get update
+done
+apt-get update
 
-  # Install proprietary NVIDIA Drivers and CUDA
-  # See https://wiki.debian.org/NvidiaGraphicsDrivers
-  export DEBIAN_FRONTEND=noninteractive
-  apt-get install -y "linux-headers-$(uname -r)"
-  # Without --no-install-recommends this takes a very long time.
-  apt-get install -y -t stretch-backports --no-install-recommends \
-    nvidia-cuda-toolkit nvidia-kernel-common nvidia-driver nvidia-smi
-fi
+# Install proprietary NVIDIA Drivers and CUDA
+# See https://wiki.debian.org/NvidiaGraphicsDrivers
+export DEBIAN_FRONTEND=noninteractive
+apt-get install -y "linux-headers-$(uname -r)"
+# Without --no-install-recommends this takes a very long time.
+apt-get install -y -t stretch-backports --no-install-recommends \
+  nvidia-cuda-toolkit nvidia-kernel-common nvidia-driver nvidia-smi
 
 # Create a system wide NVBLAS config
 # See http://docs.nvidia.com/cuda/nvblas/
@@ -99,14 +97,7 @@ else
   git clone https://github.com/atgenomix/deepvariant.git
   cd ${DEEPVARIANT}
 
-  if (lspci | grep -q NVIDIA); then
-    HOME="${HOME}" DV_GPU_BUILD=1 DV_INSTALL_GPU_DRIVERS=1 bash ./build-prereq.sh
-  else
-    echo 'No NVIDIA card detected. Skipping installation.' >&2
-    HOME="${HOME}" DV_GPU_BUILD=1 DV_INSTALL_GPU_DRIVERS=1 bash ./build-prereq.sh
-    # HOME="${HOME}" bash ./build-prereq.sh
-  fi
-
+  HOME="${HOME}" DV_GPU_BUILD=1 DV_INSTALL_GPU_DRIVERS=1 bash ./build-prereq.sh
   HOME="${HOME}" PATH="${PATH}:${HOME}/bin" bash ./build_release_binaries.sh
   BUCKET="gs://${DEEPVARIANT}"
   BIN_VERSION="0.7.0"

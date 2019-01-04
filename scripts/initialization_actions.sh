@@ -88,6 +88,38 @@ if is_master ; then
   apt-get install ansible -y
   # Restart YARN daemons to pick up new group without restarting nodes.
   systemctl restart hadoop-yarn-resourcemanager
+
+  # wait till slaves ready
+  while true
+  do
+    slaves=`cat /etc/hadoop/conf/nodes_include`
+    ret=0
+    for i in ${slaves[@]};
+    do
+      echo ${i}
+      ssh ${i} -t "sudo tail /var/log/dataproc-initialization-script-0.log | grep 'initialization_actions.sh done'"
+      if [[ $? != 0 ]]; then
+        ret=1
+      fi
+    done
+
+    echo ${ret}
+
+    if [[ ${ret} == 0 ]]; then
+      echo "success"
+      break
+    else
+      echo "wait 30sec ..."
+      sleep 30
+    fi
+  done
+
+  # do cluster preparation
+  git clone https://github.com/atgenomix/deepvariant-on-spark.git
+  apt-get install python-pip -y
+  pip install jinja2
+  cd deepvariant-on-spark/ansible && python host_gen.py
+
 else
   HOME=/usr/local
   PATH="$PATH:${HOME}/bin"

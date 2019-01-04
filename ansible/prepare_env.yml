@@ -1,0 +1,231 @@
+---
+
+- hosts: master
+  tags: ['master']
+  tasks:
+  - block:
+
+    # GCS connector installation
+    ####################################################################################
+    - shell: ls /usr/lib/hadoop/lib/gcs-connector-*
+      register: gcs
+    - name: make install gcs connector
+      file:
+        src: "{{ gcs.stdout }}"
+        dest: /home/liyunlung/gcs-connector-hadoop2-latest.jar
+        state: link
+
+    # hadoop installation
+    ####################################################################################
+    - name: create hadoop directory
+      file:
+        path: /usr/local/hadoop/etc/hadoop
+        state: directory
+
+    - name: make install hadoop
+      file:
+        src: /usr/lib/hadoop/etc/hadoop/core-site.xml
+        dest: /usr/local/hadoop/etc/hadoop/core-site.xml
+        state: link
+
+    # third_party installation
+    ####################################################################################
+    - name: download executable from gs://seqslab-deepvariant/binary/
+      shell: cd /usr/local/bin && gsutil -m cp -r gs://seqslab-deepvariant/binary/bin/* .
+
+    - file:
+        path: "/usr/local/bin/{{ item }}"
+        mode: 0755
+      with_items: ['samtools', 'bgzip', 'bedtools', 'bcftools', 'tabix']
+
+    # SeqsLab installation
+    ####################################################################################
+    - name: create seqpiper scrit directory
+      file:
+        path: /usr/local/seqslab/SeqPiper
+        state: directory
+    - name: download seqpiper script from gs://seqslab-deepvariant/scripts/SeqPiper
+      shell: cd /usr/local/seqslab/SeqPiper && gsutil -m cp -r gs://seqslab-deepvariant/scripts/SeqPiper/* .
+    - file:
+        path: /usr/local/seqslab/SeqPiper
+        mode: 0777
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        recurse: yes
+
+    - name: create PiedPiper directory
+      file:
+        path: /usr/local/seqslab/PiedPiper/target/
+        state: directory
+    - name: make install PiedPiper.jar
+      file:
+        src: /usr/local/bin/PiedPiper.jar
+        dest: /usr/local/seqslab/PiedPiper/target/PiedPiper.jar
+        state: link
+        force: yes
+
+    # parallelization.bed installation
+    ####################################################################################
+    - name: prepare parallelization.bed
+      shell: hadoop fs -mkdir hdfs:///bed/"{{ item }}"
+      failed_when: false
+      with_items:
+      - "{{ ref_version }}"
+
+    - name: copy parallelization.bed
+      shell: hadoop fs -cp gs://seqslab-deepvariant/bed/"{{ item }}"/contiguous_unmasked_regions_156_parts hdfs:///bed/"{{ item }}"/
+      failed_when: false
+      with_items:
+      - "{{ ref_version }}"
+
+    become: true
+
+
+- hosts: slave
+  tags: ['slave']
+  tasks:
+  - block:
+
+    # reference preparation
+    ####################################################################################
+    - name: create seqpiper reference directory
+      tags: ['data']
+      file:
+        path: /seqslab/mnt/reference/{{ item[0] }}/{{ item[1] }}
+        state: directory
+      with_nested:
+        - "{{ ref_version }}"
+        - ['HG', 'GRCH']
+
+    - name: download reference.fa
+      tags: ['data']
+      shell: cd /seqslab/mnt/reference/{{ item[0] }}/{{ item[1] }} && gsutil cp gs://seqslab-deepvariant/ref/{{ item[0] }}/{{ item[1] }}/{{ item[2] }} .
+      with_nested:
+        - "{{ ref_version }}"
+        - ['HG', 'GRCH']
+        - ['ref.fa', 'ref.fa.fai', 'ref.dict']
+
+    # deepvariant model preparation
+    ####################################################################################
+    - name: create DeepVariant model path
+      tags: ['data']
+      file:
+        path: /seqslab/mnt/system/model/{{ item[0] }}/DeepVariant-inception_v3-0.7.0+data-{{ item[1] }}_standard/
+        state: directory
+      with_nested:
+      - "{{ ref_version }}"
+      - ["wgs", "wes"]
+    - name: download DeepVariant model
+      tags: ['data']
+      shell: cd /seqslab/mnt/system/model/{{ item }} && gsutil -m cp -r gs://deepvariant/models/DeepVariant/0.7.0/* .
+      with_items:
+      - "{{ ref_version }}"
+
+    # SeqsLab env preparation
+    ####################################################################################
+    - name: create seqpiper working temporary directory
+      file:
+        path: /seqslab/tmp/
+        state: absent
+
+    - name: create seqpiper working temporary directory
+      file:
+        path: /seqslab/tmp/
+        state: directory
+        mode: 0777
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        recurse: yes
+
+    # deepvariant installation
+    ####################################################################################
+    - file:
+        path: /usr/local/seqslab/deepvariant/bazel-bin/deepvariant/
+        state: directory
+
+    - name: make install deepvariant make_examples
+      file:
+        src: /usr/local/deepvariant/bazel-bin/deepvariant/make_examples
+        dest: /usr/local/seqslab/deepvariant/bazel-bin/deepvariant/make_examples
+        state: link
+
+    - name: make install deepvariant call_variants
+      file:
+        src: /usr/local/deepvariant/bazel-bin/deepvariant/call_variants
+        dest: /usr/local/seqslab/deepvariant/bazel-bin/deepvariant/call_variants
+        state: link
+
+    - name: make install deepvariant postprocess_variants
+      file:
+        src: /usr/local/deepvariant/bazel-bin/deepvariant/postprocess_variants
+        dest: /usr/local/seqslab/deepvariant/bazel-bin/deepvariant/postprocess_variants
+        state: link
+
+    # third_party installation
+    ####################################################################################
+    - name: download executable from gs://seqslab-deepvariant/binary/
+      shell: cd /usr/local/bin && gsutil -m cp -r gs://seqslab-deepvariant/binary/bin/* .
+
+    - file:
+        path: "/usr/local/bin/{{ item }}"
+        mode: 0755
+      with_items: ['samtools', 'bgzip', 'bedtools', 'bcftools', 'tabix']
+
+    - name: make install picard.jar
+      shell: mkdir -p /usr/local/seqslab/third_party && mv /usr/local/bin/picard.jar /usr/local/seqslab/third_party
+
+    - name: install
+      shell: apt-get install python3-pip -y && pip3 install tensorflow tensorflow-gpu pysam ply
+
+    # hadoop installation
+    ####################################################################################
+    - name: create hadoop directory
+      file:
+        path: /usr/local/hadoop/bin
+        state: directory
+
+    - name: make install hadoop
+      file:
+        src: /usr/bin/hadoop
+        dest: /usr/local/hadoop/bin/hadoop
+        state: link
+
+    - name: create hadoop directory
+      file:
+        path: /usr/local/hadoop/etc/hadoop
+        state: directory
+
+    - name: make install hadoop
+      file:
+        src: /usr/lib/hadoop/etc/hadoop/core-site.xml
+        dest: /usr/local/hadoop/etc/hadoop/core-site.xml
+        state: link
+
+    # SeqsLab installation
+    ####################################################################################
+    - name: create seqpiper scrit directory
+      file:
+        path: /usr/local/seqslab/SeqPiper
+        state: directory
+    - name: download seqpiper script from gs://seqslab-deepvariant/scripts/SeqPiper
+      shell: cd /usr/local/seqslab/SeqPiper && gsutil -m cp -r gs://seqslab-deepvariant/scripts/SeqPiper/* .
+    - file:
+        path: /usr/local/seqslab/SeqPiper
+        mode: 0777
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        recurse: yes
+
+    - name: create PiedPiper directory
+      file:
+        path: /usr/local/seqslab/PiedPiper/target/
+        state: directory
+    - name: make install PiedPiper.jar
+      file:
+        src: /usr/local/bin/PiedPiper.jar
+        dest: /usr/local/seqslab/PiedPiper/target/PiedPiper.jar
+        state: link
+
+
+    become: true
+

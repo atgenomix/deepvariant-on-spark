@@ -54,6 +54,18 @@ NVBLAS_GPU_LIST ALL
 # Add more configuration here.
 EOF
 
+echo "NVBLAS_CONFIG_FILE=${NVBLAS_CONFIG_FILE}" >> /etc/environment
+
+# Rebooting during an initialization action is not recommended, so just
+# dynamically load kernel modules. If you want to run an X server, it is
+# recommended that you schedule a reboot to occur after the initialization
+# action finishes.
+modprobe -r nouveau
+modprobe nvidia-current
+modprobe nvidia-drm
+modprobe nvidia-uvm
+modprobe drm
+
 function is_master() {
   local role="$(/usr/share/google/get_metadata_value attributes/dataproc-role)"
   if [[ "$role" == 'Master' ]] ; then
@@ -63,31 +75,13 @@ function is_master() {
   fi
 }
 
-if (lspci | grep -q NVIDIA); then
-  echo "NVBLAS_CONFIG_FILE=${NVBLAS_CONFIG_FILE}" >> /etc/environment
-
-  # Rebooting during an initialization action is not recommended, so just
-  # dynamically load kernel modules. If you want to run an X server, it is
-  # recommended that you schedule a reboot to occur after the initialization
-  # action finishes.
-  modprobe -r nouveau
-  modprobe nvidia-current
-  modprobe nvidia-drm
-  modprobe nvidia-uvm
-  modprobe drm
-  # Restart YARN daemons to pick up new group without restarting nodes.
-  if is_master ; then
-    systemctl restart hadoop-yarn-resourcemanager
-  else
-    systemctl restart hadoop-yarn-nodemanager
-  fi
-fi
-
 if is_master ; then
   # ansible installation
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
   apt-get update
   apt-get install ansible -y
+  # Restart YARN daemons to pick up new group without restarting nodes.
+  systemctl restart hadoop-yarn-resourcemanager
 else
   HOME=/usr/local
   PATH="$PATH:${HOME}/bin"
@@ -108,6 +102,9 @@ else
   WES_MODEL_NAME="DeepVariant-inception_v3-${MODEL_VERSION}+data-wes_standard"
   WES_MODEL_BUCKET="${BUCKET}/models/DeepVariant/${MODEL_VERSION}/${WES_MODEL_NAME}"
   gsutil cp -R "${WES_MODEL_BUCKET}" .
+  if (lspci | grep -q NVIDIA); then
+    systemctl restart hadoop-yarn-nodemanager
+  fi
 fi
 
 echo "[info] setup_drivers.sh done"

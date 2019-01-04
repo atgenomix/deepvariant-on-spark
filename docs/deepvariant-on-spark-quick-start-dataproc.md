@@ -24,6 +24,25 @@ and Hadoop service offered on Google Cloud Platform.
 gcloud beta dataproc clusters delete my-deepvariant-on-spark
 ```
 
+## Initialize DeepVariant-on-Spark
+
+DeepVariant-on-Spark leverage Ansible to deploy SeqPiper and related
+packages to DataProc Cluster. You can login the terminal of the master
+via Google Cloud Platform or the following command:
+
+```
+gcloud compute ssh --ssh-flag="-A" my-deepvariant-on-spark-m --zone="us-west1-b"
+```
+
+### Deploy SeqPiper and related packages
+
+```
+```
+
+NOTE: If any failure is occurred, please refer to the following session
+to find the root cause. If not fixed, please submit an issue to [our
+github repo](issues/new)
+
 ## Check Environment
 
 DeepVariant will be installed into each worker node. You can login the

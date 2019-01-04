@@ -19,10 +19,10 @@ vcores with 104 GB memory.
 ```
 gcloud beta dataproc clusters create my-deepvariant-on-spark \
   --subnet default --zone us-west1-b \
-  --master-machine-type n1-highmem-8 --master-boot-disk-size 1024 \
+  --master-machine-type n1-highmem-8 --master-boot-disk-size 256 \
   --num-workers 5 --worker-machine-type n1-highmem-16 \
   --worker-boot-disk-size 384 \
-  --num-worker-local-ssds 1 --image-version 1.3-deb9  \
+  --num-worker-local-ssds 1 --image-version 1.2.59-deb9  \
   --initialization-actions gs://seqslab-deepvariant/scripts/initialization-on-dataproc.sh  \
   --initialization-action-timeout 20m
 ```
@@ -32,7 +32,7 @@ gcloud beta dataproc clusters create my-deepvariant-on-spark \
 
 DeepVariant-on-Spark leverage SeqsPiper to wrap DeepVariant into
 
-## Execute DeepVariant on Spark
+## Run DeepVariant on Spark
 
 ### Preliminaries
 
@@ -70,7 +70,29 @@ time gsutil -m cp -r "${DATA_BUCKET}/HG002_NIST_150bp_50x.bam" "${DATA_DIR}"
 
 It took us about 15min to copy the files.
 
+### Submit a Spark job to execute DeepVariant in parallel
+
+```
+
+```
+
+
 ### Result
+
+```
+
+```
+
+## Resources used by each step
+
+Step                               | wall time
+---------------------------------- | ---------------
+`adam transform`                   | 1h 45m 46s
+`make_examples`                    | 1h 45m 46s
+`call_variants`                    | 3h 25m 38s
+`postprocess_variants` (no gVCF)   | 21m 33s
+`postprocess_variants` (with gVCF) | 55m 47s
+total time (single machine)        | 5h 33m - 6h 07m
 
 ## Delete Cluster
 

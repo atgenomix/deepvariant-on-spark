@@ -103,7 +103,8 @@ else
     HOME="${HOME}" DV_GPU_BUILD=1 DV_INSTALL_GPU_DRIVERS=1 bash ./build-prereq.sh
   else
     echo 'No NVIDIA card detected. Skipping installation.' >&2
-    HOME="${HOME}" bash ./build-prereq.sh
+    HOME="${HOME}" DV_GPU_BUILD=1 DV_INSTALL_GPU_DRIVERS=1 bash ./build-prereq.sh
+    # HOME="${HOME}" bash ./build-prereq.sh
   fi
 
   HOME="${HOME}" PATH="${PATH}:${HOME}/bin" bash ./build_release_binaries.sh

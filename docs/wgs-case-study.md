@@ -13,6 +13,8 @@ not be the fastest or cheapest configuration for your needs.
 
 ## Launch CPU Cluster
 
+In this example, there are 5 worker nodes launched and each node has 16
+vcores with 104 GB memory.
 
 ```
 gcloud beta dataproc clusters create my-deepvariant-on-spark \

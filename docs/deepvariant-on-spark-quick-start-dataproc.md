@@ -24,7 +24,7 @@ and Hadoop service offered on Google Cloud Platform.
 gcloud beta dataproc clusters delete my-deepvariant-on-spark
 ```
 
-## Check environment
+## Check Environment
 
 DeepVariant will be installed into each worker node. You can login the
 terminal of the first worker via Google Cloud Platform or the following

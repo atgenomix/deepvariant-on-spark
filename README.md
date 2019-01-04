@@ -23,7 +23,8 @@ Apache Spark for pipeline acceleration.
 ### Quick start and Case studies
 
 *   [DeepVariant-on-Spark quick start on Google Cloud vid DataProc](docs/deepvariant-on-spark-quick-start-dataproc.md)
-
+*   [DeepVariant-on-Spark WGS case study](docs/wgs-case-study.md)
+*   [Multiple GPU acceleration](docs/multiple-gpu-accerlations.md)
 
 ## Contributing
 

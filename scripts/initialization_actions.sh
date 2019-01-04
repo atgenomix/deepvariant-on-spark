@@ -54,17 +54,19 @@ NVBLAS_GPU_LIST ALL
 # Add more configuration here.
 EOF
 
-echo "NVBLAS_CONFIG_FILE=${NVBLAS_CONFIG_FILE}" >> /etc/environment
+if (lspci | grep -q NVIDIA); then
+  echo "NVBLAS_CONFIG_FILE=${NVBLAS_CONFIG_FILE}" >> /etc/environment
 
-# Rebooting during an initialization action is not recommended, so just
-# dynamically load kernel modules. If you want to run an X server, it is
-# recommended that you schedule a reboot to occur after the initialization
-# action finishes.
-modprobe -r nouveau
-modprobe nvidia-current
-modprobe nvidia-drm
-modprobe nvidia-uvm
-modprobe drm
+  # Rebooting during an initialization action is not recommended, so just
+  # dynamically load kernel modules. If you want to run an X server, it is
+  # recommended that you schedule a reboot to occur after the initialization
+  # action finishes.
+  modprobe -r nouveau
+  modprobe nvidia-current
+  modprobe nvidia-drm
+  modprobe nvidia-uvm
+  modprobe drm
+fi
 
 function is_master() {
   local role="$(/usr/share/google/get_metadata_value attributes/dataproc-role)"

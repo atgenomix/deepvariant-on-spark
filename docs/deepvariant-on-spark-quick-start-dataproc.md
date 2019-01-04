@@ -41,7 +41,7 @@ gcloud compute ssh --ssh-flag="-A" my-deepvariant-on-spark-m --zone="us-west1-b"
 
 NOTE: If any failure is occurred, please refer to the following session
 to find the root cause. If not fixed, please submit an issue to [our
-github repo](issues/new)
+github repo](https://github.com/atgenomix/deepvariant-on-spark/issues/new)
 
 ## Check Environment
 

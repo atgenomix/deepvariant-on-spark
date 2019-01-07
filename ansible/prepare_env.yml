@@ -127,7 +127,7 @@
 
     # deepvariant model preparation
     ####################################################################################
-    - name: create seqpiper working temporary directory
+    - name: create deepvariant model directory
       tags: ['data']
       file:
         path: /seqslab/mnt/system/model/{{ item }}/

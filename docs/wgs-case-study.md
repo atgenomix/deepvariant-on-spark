@@ -83,16 +83,17 @@ It took us about 15min to copy the files.
 
 ```
 
-## Resources used by each step
+## Execution Time
 
-Step                               | wall time
----------------------------------- | ---------------
-`adam transform`                   | 1h 45m 46s
-`make_examples`                    | 1h 45m 46s
-`call_variants`                    | 3h 25m 38s
-`postprocess_variants` (no gVCF)   | 21m 33s
-`postprocess_variants` (with gVCF) | 55m 47s
-total time (single machine)        | 5h 33m - 6h 07m
+Step                               | 2-Workers cluster | 4-Workers Cluster | 8-Workers Cluster | 16-Workers Cluster |
+---------------------------------- | ----------------- | ----------------- | ----------------- | ------------------ |
+`ADAM transform`                   | 1h 45m 46s        |                   |                   |                    |
+`BAM Selector`                     |                   |                   |                   |                    |
+`make_examples`                    | 1h 45m 46s        |                   |                   |                    |
+`call_variants`                    | 3h 25m 38s        |                   |                   |                    |
+`postprocess_variants` (no gVCF)   | 21m 33s           |                   |                   |                    |
+`postprocess_variants` (with gVCF) | 55m 47s           |                   |                   |                    |
+Total time                         | 5h 33m - 6h 07m   |                   |                   |                    |
 
 ## Delete Cluster
 

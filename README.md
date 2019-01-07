@@ -27,8 +27,8 @@ Apache Spark for pipeline acceleration.
 
 *   [Apache Hadoop 2.8.x](https://hadoop.apache.org/docs/r2.8.0/)
 *   [Apache Spark 2.2.x](https://spark.apache.org/docs/2.2.2/)
-*   [Apache Adam forked by Atgenomix](https://github.com/AnomeGAP/adam)
-*   [DeepVariant forked by Atgenomix](https://github.com/atgenomix/deepvariant)
+*   [Apache Adam v0.23 (forked and modified by Atgenomix)](https://github.com/AnomeGAP/adam)
+*   [DeepVariant v0.7.0 (forked and modified by Atgenomix)](https://github.com/atgenomix/deepvariant)
 
 ### Quick start and Case studies
 

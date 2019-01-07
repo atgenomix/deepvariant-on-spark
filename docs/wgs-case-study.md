@@ -50,7 +50,7 @@ INPUT_DIR="${BASE}/input"
 DATA_DIR="${INPUT_DIR}/data"
 BAM="${DATA_DIR}/HG002_NIST_150bp_50x.bam"
 TRUTH_VCF="${DATA_DIR}/HG002_GRCh37_GIAB_highconf_CG-IllFB-IllGATKHC-Ion-10X-SOLID_CHROM1-22_v.3.3.2_highconf_triophased.vcf.gz"
-TRUTH_BED="${DATA_DIR}/HG002_GRCh37_GIAB_highconf_CG-IllFB-IllGATKHC-Ion-10X-SOLID_CHROM1-22_v.3.3.2_highconf_noincons
+TRUTH_BED="${DATA_DIR}/HG002_GRCh37_GIAB_highconf_CG-IllFB-IllGATKHC-Ion-10X-SOLID_CHROM1-22_v.3.3.2_highconf_noincons"
 
 OUTPUT_DIR="${BASE}/output"
 OUTPUT_VCF="${OUTPUT_DIR}/HG002.output.vcf.gz"

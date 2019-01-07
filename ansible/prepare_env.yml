@@ -127,6 +127,14 @@
 
     # deepvariant model preparation
     ####################################################################################
+    - name: create seqpiper working temporary directory
+      tags: ['data']
+      file:
+        path: /seqslab/mnt/system/model/{{ item }}/
+        state: directory
+      with_items:
+        - "{{ ref_version }}"
+
     - name: create DeepVariant model path
       tags: ['data']
       file:
@@ -234,7 +242,6 @@
         path: /usr/local/seqslab/third_party
         mode: 0755
         recurse: yes
-
 
     become: true
 

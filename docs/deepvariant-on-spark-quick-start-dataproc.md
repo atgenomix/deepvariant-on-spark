@@ -1,4 +1,4 @@
-# DeepVariant-on-Spark Quick Start on Google Cloud
+# DeepVariant-on-Spark (DOS) Quick Start on Google Cloud
 
 This is an explanation of how to launch DeepVariant-on-Spark in Google
 Cloud.
@@ -11,7 +11,7 @@ and Hadoop service offered on Google Cloud Platform.
 ## Launch Cluster
 
 ```
- gcloud beta dataproc clusters create my-deepvariant-on-spark \
+ gcloud beta dataproc clusters create my-dos \
  --subnet default --zone us-west1-b \
  --image-version 1.2.59-deb9 \
  --initialization-actions gs://seqslab-deepvariant/scripts/initialization-on-dataproc.sh \
@@ -21,17 +21,18 @@ and Hadoop service offered on Google Cloud Platform.
 ## Delete Cluster
 
 ```
-gcloud beta dataproc clusters delete my-deepvariant-on-spark
+gcloud beta dataproc clusters delete my-dos
 ```
 
-## Initialize DeepVariant-on-Spark
+## Initialize DeepVariant-on-Spark (DOS)
 
 DeepVariant-on-Spark leverage Ansible to deploy SeqPiper and related
-packages to DataProc Cluster. You can login the terminal of the master
-via Google Cloud Platform or the following command:
+packages to DataProc Cluster. When the cluster has been launched
+completely, you can login the terminal of the master via Google Cloud
+Platform or the following command:
 
 ```
-gcloud compute ssh --ssh-flag="-A" my-deepvariant-on-spark-m --zone="us-west1-b"
+gcloud compute ssh --ssh-flag="-A" my-dos-m --zone="us-west1-b"
 ```
 
 ### Deploy SeqPiper and related packages
@@ -72,7 +73,7 @@ terminal of the first worker via Google Cloud Platform or the following
 command:
 
 ```
-gcloud compute ssh --ssh-flag="-A" my-deepvariant-on-spark-w-0 --zone="us-west1-b"
+gcloud compute ssh --ssh-flag="-A" my-dos-w-0 --zone="us-west1-b"
 ```
 
 ### Verify DeepVariant Package
@@ -80,7 +81,7 @@ gcloud compute ssh --ssh-flag="-A" my-deepvariant-on-spark-w-0 --zone="us-west1-
 DeepVariant will be installed in /usr/local/seqslab/deepvariant, so you can check
 whether the following subfolders are existed in the folder or not.
 ```
-user@my-deepvariant-on-spark-w-0:~$ ls -al /usr/local/seqslab/deepvariant/
+user@my-dos-w-0:~$ ls -al /usr/local/seqslab/deepvariant/
 drwxr-sr-x  2 root staff 4096 Jan  4 05:50 DeepVariant-inception_v3-0.7.0+data-wes_standard
 drwxr-sr-x  2 root staff 4096 Jan  4 05:50 DeepVariant-inception_v3-0.7.0+data-wgs_standard
 ```
@@ -88,21 +89,21 @@ drwxr-sr-x  2 root staff 4096 Jan  4 05:50 DeepVariant-inception_v3-0.7.0+data-w
 The models of DeepVariant comprises WGS and WES
 
 ```
-user@my-deepvariant-on-spark-w-0:~$ ls -al /usr/local/seqslab/deepvariant/DeepVariant-inception_v3-0.7.0+data-wgs_standard
+user@my-dos-w-0:~$ ls -al /usr/local/seqslab/deepvariant/DeepVariant-inception_v3-0.7.0+data-wgs_standard
 -rw-r--r--  1 root staff 348681272 Jan  4 05:50 model.ckpt.data-00000-of-00001
 -rw-r--r--  1 root staff     18496 Jan  4 05:50 model.ckpt.index
 -rw-r--r--  1 root staff  31106596 Jan  4 05:50 model.ckpt.meta
 ```
 
 ```
-user@my-deepvariant-on-spark-w-0:~$ ls -al /usr/local/seqslab/deepvariant/DeepVariant-inception_v3-0.7.0+data-wes_standard
+user@my-dos-w-0:~$ ls -al /usr/local/seqslab/deepvariant/DeepVariant-inception_v3-0.7.0+data-wes_standard
 -rw-r--r--  1 root staff 348681272 Jan  4 05:50 model.ckpt.data-00000-of-00001
 -rw-r--r--  1 root staff     18473 Jan  4 05:50 model.ckpt.index
 -rw-r--r--  1 root staff  31118992 Jan  4 05:50 model.ckpt.meta
 ```
 
 ```
-user@my-deepvariant-on-spark-w-0:~$ ls -al /usr/local/seqslab/deepvariant/bazel-bin/deepvariant/
+user@my-dos-w-0:~$ ls -al /usr/local/seqslab/deepvariant/bazel-bin/deepvariant/
 -r-xr-xr-x 1 root staff 5874931 Jan  4 05:50 call_variants
 -r-xr-xr-x 1 root staff 9807273 Jan  4 05:50 make_examples
 -r-xr-xr-x 1 root staff 7839862 Jan  4 05:50 postprocess_variants
@@ -153,7 +154,7 @@ For evaluation, please check ${OUTPUT_DIR} and verify those output files
 and their size.
 
 ```
-user@my-deepvariant-on-spark-w-1:~$ ls -al ${OUTPUT_DIR}
+user@my-dos-w-1:~$ ls -al ${OUTPUT_DIR}
 -rw-r--r-- 1 user user   4132 Jan  4 06:57 call_variants_output.tfrecord.gz
 -rw-r--r-- 1 user user 532000 Jan  4 06:56 examples.tfrecord.gz
 -rw-r--r-- 1 user user 154742 Jan  4 06:56 examples.tfrecord.gz.run_info.pbtxt

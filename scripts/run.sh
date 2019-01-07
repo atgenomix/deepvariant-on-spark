@@ -171,7 +171,7 @@ ${spark} \
   --conf spark.executor.extraJavaOptions=-XX:+UseG1GC \
   --conf spark.serializer=org.apache.spark.serializer.KryoSerializer \
   --conf spark.kryo.registrator=org.bdgenomics.adam.serialization.ADAMKryoRegistrator \
-  /usr/local/bin/adam.jar transformAlignments \
+  /usr/local/seqslab/adam/adam-assembly/target/adam.jar transformAlignments \
       ${input_bam} \
       ${alignment_parquet} \
       -force_load_bam -atgx_transform -parquet_compression_codec SNAPPY

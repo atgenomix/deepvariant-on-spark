@@ -38,11 +38,14 @@ gcloud compute ssh --ssh-flag="-A" my-deepvariant-on-spark-m --zone="us-west1-b"
 
 ```
 git clone https://github.com/atgenomix/deepvariant-on-spark.git
-
-cd deepvariant-on-spark/ansible && python host_gen.py
+cd deepvariant-on-spark/ansible
+python host_gen.py
 ansible-playbook -i hosts prepare_env.yml
 ```
 
+```
+
+```
 
 NOTE: If any failure is occurred, please refer to the following session
 to find the root cause. If not fixed, please submit an issue to [our

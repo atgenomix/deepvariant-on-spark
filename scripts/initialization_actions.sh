@@ -95,8 +95,8 @@ else
   HOME=/usr/local
   PATH="$PATH:${HOME}/bin"
   DEEPVARIANT=deepvariant
-  mkdir -p ${HOME}
-  cd ${HOME}
+  mkdir -p ${HOME}/seqslab
+  cd ${HOME}/seqslab
   git clone https://github.com/atgenomix/deepvariant.git
   cd ${DEEPVARIANT}
 

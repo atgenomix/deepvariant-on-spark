@@ -30,39 +30,59 @@
 
     # third_party installation
     ####################################################################################
-    - name: download executable from gs://seqslab-deepvariant/binary/
-      shell: cd /usr/local/bin && gsutil -m cp -r gs://seqslab-deepvariant/binary/bin/* .
+    - name: download executable from gs://seqslab-deepvariant/sys/bin/
+      shell: cd /usr/local/bin && gsutil -m cp -r gs://seqslab-deepvariant/sys/bin/* .
 
     - file:
         path: "/usr/local/bin/{{ item }}"
         mode: 0755
-      with_items: ['samtools', 'bgzip', 'bedtools', 'bcftools', 'tabix']
+      with_items: ['samtools', 'bgzip', 'bedtools', 'bcftools', 'tabix', 'vcf-sort']
 
     # SeqsLab installation
     ####################################################################################
-    - name: create seqpiper scrit directory
+    - name: create SeqPiper directory
       file:
         path: /usr/local/seqslab/SeqPiper
         state: directory
-    - name: download seqpiper script from gs://seqslab-deepvariant/scripts/SeqPiper
-      shell: cd /usr/local/seqslab/SeqPiper && gsutil -m cp -r gs://seqslab-deepvariant/scripts/SeqPiper/* .
+    - name: download seqpiper script from gs://seqslab-deepvariant/sys/seqslab/SeqPiper
+      shell: cd /usr/local/seqslab/SeqPiper && gsutil -m cp -r gs://seqslab-deepvariant/sys/seqslab/SeqPiper/* .
     - file:
         path: /usr/local/seqslab/SeqPiper
-        mode: 0777
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+        mode: 0755
         recurse: yes
 
     - name: create PiedPiper directory
       file:
-        path: /usr/local/seqslab/PiedPiper/target/
+        path: /usr/local/seqslab/PiedPiper
         state: directory
-    - name: make install PiedPiper.jar
+    - name: download seqpiper script from gs://seqslab-deepvariant/sys/seqslab/PiedPiper
+      shell: cd /usr/local/seqslab/PiedPiper && gsutil -m cp -r gs://seqslab-deepvariant/sys/seqslab/PiedPiper/* .
+    - file:
+        path: /usr/local/seqslab/PiedPiper
+        mode: 0755
+        recurse: yes
+
+    - name: create adam directory
       file:
-        src: /usr/local/bin/PiedPiper.jar
-        dest: /usr/local/seqslab/PiedPiper/target/PiedPiper.jar
-        state: link
-        force: yes
+        path: /usr/local/seqslab/adam
+        state: directory
+    - name: download adam jar from gs://seqslab-deepvariant/sys/seqslab/adam
+      shell: cd /usr/local/seqslab/adam && gsutil -m cp -r gs://seqslab-deepvariant/sys/seqslab/adam/* .
+    - file:
+        path: /usr/local/seqslab/adam
+        mode: 0755
+        recurse: yes
+
+    - name: create third_party directory
+      file:
+        path: /usr/local/seqslab/third_party
+        state: directory
+    - name: download picard jar from gs://seqslab-deepvariant/sys/seqslab/third_party
+      shell: cd /usr/local/seqslab/third_party && gsutil -m cp -r gs://seqslab-deepvariant/sys/seqslab/third_party/* .
+    - file:
+        path: /usr/local/seqslab/third_party
+        mode: 0755
+        recurse: yes
 
     # parallelization.bed installation
     ####################################################################################
@@ -110,16 +130,12 @@
     - name: create DeepVariant model path
       tags: ['data']
       file:
-        path: /seqslab/mnt/system/model/{{ item[0] }}/DeepVariant-inception_v3-0.7.0+data-{{ item[1] }}_standard/
-        state: directory
+        src: /usr/local/seqslab/deepvariant/DeepVariant-inception_v3-0.7.0+data-{{ item[1] }}_standard/
+        dest: /seqslab/mnt/system/model/{{ item[0] }}/DeepVariant-inception_v3-0.7.0+data-{{ item[1] }}_standard/
+        state: link
       with_nested:
       - "{{ ref_version }}"
       - ["wgs", "wes"]
-    - name: download DeepVariant model
-      tags: ['data']
-      shell: cd /seqslab/mnt/system/model/{{ item }} && gsutil -m cp -r gs://deepvariant/models/DeepVariant/0.7.0/* .
-      with_items:
-      - "{{ ref_version }}"
 
     # SeqsLab env preparation
     ####################################################################################
@@ -133,49 +149,21 @@
         path: /seqslab/tmp/
         state: directory
         mode: 0777
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
         recurse: yes
 
-    # deepvariant installation
-    ####################################################################################
-    - file:
-        path: /usr/local/seqslab/deepvariant/bazel-bin/deepvariant/
-        state: directory
-
-    - name: make install deepvariant make_examples
-      file:
-        src: /usr/local/deepvariant/bazel-bin/deepvariant/make_examples
-        dest: /usr/local/seqslab/deepvariant/bazel-bin/deepvariant/make_examples
-        state: link
-
-    - name: make install deepvariant call_variants
-      file:
-        src: /usr/local/deepvariant/bazel-bin/deepvariant/call_variants
-        dest: /usr/local/seqslab/deepvariant/bazel-bin/deepvariant/call_variants
-        state: link
-
-    - name: make install deepvariant postprocess_variants
-      file:
-        src: /usr/local/deepvariant/bazel-bin/deepvariant/postprocess_variants
-        dest: /usr/local/seqslab/deepvariant/bazel-bin/deepvariant/postprocess_variants
-        state: link
 
     # third_party installation
     ####################################################################################
     - name: download executable from gs://seqslab-deepvariant/binary/
-      shell: cd /usr/local/bin && gsutil -m cp -r gs://seqslab-deepvariant/binary/bin/* .
+      shell: cd /usr/local/bin && gsutil -m cp -r gs://seqslab-deepvariant/sys/bin/* .
 
     - file:
         path: "/usr/local/bin/{{ item }}"
         mode: 0755
-      with_items: ['samtools', 'bgzip', 'bedtools', 'bcftools', 'tabix']
-
-    - name: make install picard.jar
-      shell: mkdir -p /usr/local/seqslab/third_party && mv /usr/local/bin/picard.jar /usr/local/seqslab/third_party
+      with_items: ['samtools', 'bgzip', 'bedtools', 'bcftools', 'tabix', 'vcf-sort']
 
     - name: install
-      shell: apt-get install python3-pip -y && pip3 install tensorflow tensorflow-gpu pysam ply
+      shell: apt-get install python3-pip -y && pip3 install pysam ply
 
     # hadoop installation
     ####################################################################################
@@ -203,28 +191,49 @@
 
     # SeqsLab installation
     ####################################################################################
-    - name: create seqpiper scrit directory
+    - name: create SeqPiper directory
       file:
         path: /usr/local/seqslab/SeqPiper
         state: directory
-    - name: download seqpiper script from gs://seqslab-deepvariant/scripts/SeqPiper
-      shell: cd /usr/local/seqslab/SeqPiper && gsutil -m cp -r gs://seqslab-deepvariant/scripts/SeqPiper/* .
+    - name: download seqpiper script from gs://seqslab-deepvariant/sys/seqslab/SeqPiper
+      shell: cd /usr/local/seqslab/SeqPiper && gsutil -m cp -r gs://seqslab-deepvariant/sys/seqslab/SeqPiper/* .
     - file:
         path: /usr/local/seqslab/SeqPiper
-        mode: 0777
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+        mode: 0755
         recurse: yes
 
     - name: create PiedPiper directory
       file:
-        path: /usr/local/seqslab/PiedPiper/target/
+        path: /usr/local/seqslab/PiedPiper
         state: directory
-    - name: make install PiedPiper.jar
+    - name: download seqpiper script from gs://seqslab-deepvariant/sys/seqslab/PiedPiper
+      shell: cd /usr/local/seqslab/PiedPiper && gsutil -m cp -r gs://seqslab-deepvariant/sys/seqslab/PiedPiper/* .
+    - file:
+        path: /usr/local/seqslab/PiedPiper
+        mode: 0755
+        recurse: yes
+
+    - name: create adam directory
       file:
-        src: /usr/local/bin/PiedPiper.jar
-        dest: /usr/local/seqslab/PiedPiper/target/PiedPiper.jar
-        state: link
+        path: /usr/local/seqslab/adam
+        state: directory
+    - name: download adam jar from gs://seqslab-deepvariant/sys/seqslab/adam
+      shell: cd /usr/local/seqslab/adam && gsutil -m cp -r gs://seqslab-deepvariant/sys/seqslab/adam/* .
+    - file:
+        path: /usr/local/seqslab/adam
+        mode: 0755
+        recurse: yes
+
+    - name: create third_party directory
+      file:
+        path: /usr/local/seqslab/third_party
+        state: directory
+    - name: download picard jar from gs://seqslab-deepvariant/sys/seqslab/third_party
+      shell: cd /usr/local/seqslab/third_party && gsutil -m cp -r gs://seqslab-deepvariant/sys/seqslab/third_party/* .
+    - file:
+        path: /usr/local/seqslab/third_party
+        mode: 0755
+        recurse: yes
 
 
     become: true

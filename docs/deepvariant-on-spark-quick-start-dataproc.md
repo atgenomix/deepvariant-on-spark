@@ -37,10 +37,10 @@ gcloud compute ssh --ssh-flag="-A" my-deepvariant-on-spark-m --zone="us-west1-b"
 ### Deploy SeqPiper and related packages
 
 ```
-apt-get install python-pip -y
-pip install jinja2
 git clone https://github.com/atgenomix/deepvariant-on-spark.git
+
 cd deepvariant-on-spark/ansible && python host_gen.py
+ansible-playbook -i hosts prepare_env.yml
 ```
 
 

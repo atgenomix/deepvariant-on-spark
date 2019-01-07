@@ -86,6 +86,8 @@ if is_master ; then
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
   apt-get update
   apt-get install ansible -y
+  apt-get install python-pip -y
+  pip install jinja2
   # Restart YARN daemons to pick up new group without restarting nodes.
   systemctl restart hadoop-yarn-resourcemanager
 

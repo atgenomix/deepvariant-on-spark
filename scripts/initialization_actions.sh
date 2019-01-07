@@ -97,7 +97,7 @@ if is_master ; then
     for i in ${slaves[@]};
     do
       echo ${i}
-      ssh ${i} -o "StrictHostKeyChecking no" -t -t "sudo tail /var/log/dataproc-initialization-script-0.log | grep 'initialization_actions.sh done'"
+      ssh ${i} -o "StrictHostKeyChecking no" -T "sudo tail /var/log/dataproc-initialization-script-0.log | grep 'initialization_actions.sh done'"
       if [[ $? != 0 ]]; then
         ret=1
       fi

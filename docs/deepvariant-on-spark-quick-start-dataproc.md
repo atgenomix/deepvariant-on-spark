@@ -42,10 +42,10 @@ gcloud compute ssh --ssh-flag="-A" my-dos-m --zone="us-west1-b"
 
 ### Deploy SeqPiper and related packages
 
-DeepVariant-on-Spark leverages SeqPiper, a wrapper of Spark Piper, to
-wrap DeepVariant in Spark. Please clone DeepVaraint-on-Spark github repo.
-and use ansible, IT automation tools, to install SeqPiper and related
-packages followed by the following commands:
+DeepVariant-on-Spark leverages `SeqPiper`, a wrapper of Spark `Pipe()`,
+to wrap DeepVariant in Spark. Please clone DeepVaraint-on-Spark github
+repo. and use Ansible, IT automation tools, to install SeqPiper and
+related packages followed by the following commands:
 
 ```
 git clone https://github.com/atgenomix/deepvariant-on-spark.git
@@ -54,7 +54,7 @@ python host_gen.py
 ansible-playbook -i hosts prepare_env.yml
 ```
 
-Then, DeepVariant-on-Spark will be installed automatically by ansible. It
+Then, DeepVariant-on-Spark will be installed automatically by Ansible. It
 will take 10 or more minutes to deploy all of necessary packages to the
 entire cluster. If successful, all of deployment has no failure and you
 will see the log like:
@@ -66,6 +66,11 @@ my-dos-m                   : ok=21   changed=13   unreachable=0    failed=0
 my-dos-w-0                 : ok=26   changed=22   unreachable=0    failed=0
 my-dos-w-1                 : ok=26   changed=22   unreachable=0    failed=0
 ```
+
+
+**Congradulates! Let's start to run
+[the first WGS sample](docs/wgs-case-study.md).**
+
 
 NOTE: If any failure is occurred, please refer to the following session
 to find the root cause. If not fixed, please submit an issue to [our

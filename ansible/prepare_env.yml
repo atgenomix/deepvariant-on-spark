@@ -87,7 +87,7 @@
     # parallelization.bed installation
     ####################################################################################
     - name: prepare parallelization.bed
-      shell: hadoop fs -mkdir hdfs:///bed/"{{ item }}"
+      shell: hadoop fs -mkdir -p hdfs:///bed/{{ item }}
       failed_when: false
       with_items:
       - "{{ ref_version }}"

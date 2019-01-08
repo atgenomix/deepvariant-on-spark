@@ -13,26 +13,25 @@ not be the fastest or cheapest configuration for your needs.
 
 ## Launch CPU Cluster
 
-In this example, there are 5 worker nodes launched and each node has 16
+In this example, there are 4 worker nodes launched and each node has 16
 vcores with 104 GB memory.
 
 ```
-gcloud beta dataproc clusters create my-deepvariant-on-spark \
+gcloud beta dataproc clusters create my-dos \
   --subnet default --zone us-west1-b \
   --master-machine-type n1-highmem-8 --master-boot-disk-size 256 \
-  --num-workers 5 --worker-machine-type n1-highmem-16 \
+  --num-workers 4 --worker-machine-type n1-highmem-16 \
   --worker-boot-disk-size 384 \
   --num-worker-local-ssds 1 --image-version 1.2.59-deb9  \
   --initialization-actions gs://seqslab-deepvariant/scripts/initialization-on-dataproc.sh  \
   --initialization-action-timeout 20m
 ```
 
+After the cluster has been launched, please follow [the quick-start guide
+for DataProc](/docs/deepvariant-on-spark-quick-start-dataproc.md#initialize-deepvariant-on-spark-dos)
+to install DeeopVariant-on-Spark.
 
-## Install SeqPiper and related packages
-
-DeepVariant-on-Spark leverage SeqsPiper to wrap DeepVariant into
-
-## Run DeepVariant on Spark
+## Run a WGS sample
 
 ### Preliminaries
 

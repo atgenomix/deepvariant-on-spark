@@ -138,8 +138,8 @@
     - name: create DeepVariant model path
       tags: ['data']
       file:
-        src: /usr/local/seqslab/deepvariant/DeepVariant-inception_v3-0.7.0+data-{{ item[1] }}_standard/
-        dest: /seqslab/mnt/system/model/{{ item[0] }}/DeepVariant-inception_v3-0.7.0+data-{{ item[1] }}_standard/
+        src: /usr/local/seqslab/deepvariant/DeepVariant-inception_v3-0.7.0+data-{{ item[1] }}_standard
+        dest: /seqslab/mnt/system/model/{{ item[0] }}/DeepVariant-inception_v3-0.7.0+data-{{ item[1] }}_standard
         state: link
       with_nested:
       - "{{ ref_version }}"
@@ -162,7 +162,7 @@
 
     # third_party installation
     ####################################################################################
-    - name: download executable from gs://seqslab-deepvariant/binary/
+    - name: download executable from gs://seqslab-deepvariant/sys/bin/
       shell: cd /usr/local/bin && gsutil -m cp -r gs://seqslab-deepvariant/sys/bin/* .
 
     - file:

@@ -190,7 +190,7 @@ pids=""
 
 for i in ${!partition_array[@]};
 do
-  echo ${i} --- ${partition_array[${i}]}
+  # echo ${i} --- ${partition_array[${i}]}
   ${spark} \
   --master yarn \
   --deploy-mode cluster \

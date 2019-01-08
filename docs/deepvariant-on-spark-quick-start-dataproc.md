@@ -11,7 +11,7 @@ and Hadoop service offered on Google Cloud Platform.
 ## Launch Cluster
 
 ```
- gcloud beta dataproc clusters create my-dos \
+gcloud beta dataproc clusters create my-dos \
  --subnet default --zone us-west1-b \
  --image-version 1.2.59-deb9 \
  --initialization-actions gs://seqslab-deepvariant/scripts/initialization-on-dataproc.sh \
@@ -160,3 +160,31 @@ user@my-dos-w-1:~$ ls -al ${OUTPUT_DIR}
 -rw-r--r-- 1 user user 154742 Jan  4 06:56 examples.tfrecord.gz.run_info.pbtxt
 -rw-r--r-- 1 user user   2207 Jan  4 06:57 output.vcf.gz
 ```
+
+## Launch GPU Environment
+
+If you would like to test GPU environment, you can launch a GPU cluster
+by the following command:
+
+```
+gcloud beta dataproc clusters create my-dos \
+ --subnet default --zone us-west1-b \
+ --worker-accelerator type=nvidia-tesla-p100,count=1 \
+ --image-version 1.2.59-deb9 \
+ --initialization-actions gs://seqslab-deepvariant/scripts/initialization-on-dataproc.sh \
+ --initialization-action-timeout 20m
+```
+
+`call_variants` is the only step of DeepVariant which is able to be
+benefited by GPU. Using the patched DeepVariant version, we can specify
+the memory resource of GPU for each DeepVariant process, like
+
+```
+/usr/local/seqslab/deepvariant/bazel-bin/deepvariant/call_variants \
+  --outfile "${CALL_VARIANTS_OUTPUT}" \
+  --examples "${OUTPUT_DIR}/examples.tfrecord.gz" \
+  --execution_hardware="seqslab_gpu" \
+  --percentage_gpu_memory=16 \
+  --checkpoint "${MODEL}"
+```
+

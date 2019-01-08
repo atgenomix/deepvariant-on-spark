@@ -8,6 +8,11 @@ Cloud.
 Google Cloud Dataproc (Cloud Dataproc) is a cloud-based managed Spark
 and Hadoop service offered on Google Cloud Platform.
 
+## Preliminaries
+To access DataProc, plese install `gsutil` first. You can go to
+[Google Cloud](https://cloud.google.com/storage/docs/gsutil_install) for
+installation guide.
+
 ## Launch Cluster
 
 ```

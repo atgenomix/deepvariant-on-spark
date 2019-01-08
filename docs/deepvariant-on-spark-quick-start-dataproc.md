@@ -57,9 +57,9 @@ will see the log like:
 ... (skipped) ...
 
 PLAY RECAP *********************************************************************
-10.138.0.11                : ok=26   changed=14   unreachable=0    failed=0
-10.138.0.12                : ok=26   changed=14   unreachable=0    failed=0
-deepvariant-on-spark-m     : ok=21   changed=13   unreachable=0    failed=0
+my-dos-m                   : ok=21   changed=13   unreachable=0    failed=0
+my-dos-w-0                 : ok=26   changed=22   unreachable=0    failed=0
+my-dos-w-1                 : ok=26   changed=22   unreachable=0    failed=0
 ```
 
 NOTE: If any failure is occurred, please refer to the following session
@@ -101,6 +101,8 @@ user@my-dos-w-0:~$ ls -al /usr/local/seqslab/deepvariant/DeepVariant-inception_v
 -rw-r--r--  1 root staff     18473 Jan  4 05:50 model.ckpt.index
 -rw-r--r--  1 root staff  31118992 Jan  4 05:50 model.ckpt.meta
 ```
+
+All executables are ready in `/usr/local/seqslab/deepvariant/bazel-bin/deepvariant/`
 
 ```
 user@my-dos-w-0:~$ ls -al /usr/local/seqslab/deepvariant/bazel-bin/deepvariant/
@@ -154,7 +156,7 @@ For evaluation, please check ${OUTPUT_DIR} and verify those output files
 and their size.
 
 ```
-user@my-dos-w-1:~$ ls -al ${OUTPUT_DIR}
+user@my-dos-w-0:~$ ls -al ${OUTPUT_DIR}
 -rw-r--r-- 1 user user   4132 Jan  4 06:57 call_variants_output.tfrecord.gz
 -rw-r--r-- 1 user user 532000 Jan  4 06:56 examples.tfrecord.gz
 -rw-r--r-- 1 user user 154742 Jan  4 06:56 examples.tfrecord.gz.run_info.pbtxt

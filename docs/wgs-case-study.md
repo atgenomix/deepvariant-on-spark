@@ -24,7 +24,8 @@ gcloud beta dataproc clusters create my-dos \
   --worker-boot-disk-size 384 \
   --num-worker-local-ssds 1 --image-version 1.2.59-deb9  \
   --initialization-actions gs://seqslab-deepvariant/scripts/initialization-on-dataproc.sh  \
-  --initialization-action-timeout 20m
+  --initialization-action-timeout 20m \
+  --properties=^--^capacity-scheduler:yarn.scheduler.capacity.resource-calculator=org.apache.hadoop.yarn.util.resource.DominantResourceCalculator--yarn:yarn.scheduler.maximum-allocation-mb=103424--yarn:yarn.nodemanager.resource.memory-mb=103424
 ```
 
 After the cluster has been launched, please follow [the quick-start guide

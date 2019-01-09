@@ -13,10 +13,10 @@ processes in parallel, so all of GPU resource can be fully utilized.
 ## Launch Cluster
 
 ```
-gcloud beta dataproc clusters create deepvariant-on-spark \
+gcloud beta dataproc clusters create my-dos \
   --subnet default --zone us-west1-b \
   --master-machine-type n1-highmem-8 --master-boot-disk-size 256 \
-  --num-workers 5 --worker-machine-type n1-highmem-16 \
+  --num-workers 4 --worker-machine-type n1-highmem-16 \
   --worker-boot-disk-size 384 \
   --worker-accelerator type=nvidia-tesla-p100,count=1 \
   --num-worker-local-ssds 1 --image-version 1.2.59-deb9  \

@@ -5,12 +5,13 @@
 input_bam=$1
 ref_version=$2
 contig_style=$3
-
+output_folder=$4
 
 # variables
 #########################################################################################
 spark=/usr/bin/spark-submit
-time=`date +"%s"`
+#time=`date +"%s"`
+time=$output_folder
 alignment_parquet=hdfs:///${time}-alignment.parquet
 alignment_bam=hdfs:///${time}-alignment.bam
 make_example_dir=hdfs:///${time}-dv-I
@@ -18,12 +19,45 @@ call_variants_dir=hdfs:///${time}-dv-II
 postprocess_variants_dir=hdfs:///${time}-dv-III
 bed_path=hdfs:///bed/${ref_version}/contiguous_unmasked_regions_156_parts
 
+# functions
+#########################################################################################
+usage() {
+  echo "Usage:"
+  echo $'\t' "$0 <Input BAM> <Output Folder> <Reference Version> <Contig Style>"
+  echo "Parameters:"
+  echo $'\t' "<Input BAM>: the input bam file from Google Strorage or HDFS"
+  echo $'\t' "<Output Folder>: the output folder on HDFS"
+  echo $'\t' "<Reference Version>: [ 19 | 38 ]"
+  echo $'\t' "<Contig Style>: [ HG | GRCH ]"
+  echo "Examples: "
+  echo $'\t' "./run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam output 19 GRCH"
+  return
+}
+
+print_time () {
+  diff=$(($3 - $2))
+  str_diff=`date +%H:%M:%S -ud @${diff}`
+  echo $1 $'\t' $str_diff
+}
 
 # argument check
 #########################################################################################
-if [[ ${contig_style} != "HG" && ${contig_style} != "GRCH" ]]; then
-  echo unsupported contig style -- ${contig_style}
+if [[ $# -ne 4 ]]; then
+  echo "[ERROR] Illegal number of parameters (Expected: 4, Actual: $#)"
+  usage $0
   exit -1
+fi
+
+if [[ ${ref_version} != "19" && ${ref_version} != "38" ]]; then
+  echo "[ERROR]: unsupported ref version - ${ref_version}"
+  usage $0
+  exit -2
+fi
+
+if [[ ${contig_style} != "HG" && ${contig_style} != "GRCH" ]]; then
+  echo "[ERROR]: unsupported contig style -- ${contig_style}"
+  usage $0
+  exit -3
 fi
 
 if [[ ${ref_version} == "38" ]]; then
@@ -145,9 +179,6 @@ elif [[ ${ref_version} == "19" ]]; then
   -l 150=chr7:40000000-50400000 -l 151=chr4:40000000-50010000 -l 152=chr10:125900000-135534747 \
   -l 153=chr2:234030000-243199373 -l 154=chr9:133100000-141213431"
     )
-else
-    echo unsupported ref version - ${ref_version}
-    exit -1
 fi
 
 

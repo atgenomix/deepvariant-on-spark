@@ -61,7 +61,7 @@ T0=$(date +%s)
 ${spark} \
   --master yarn \
   --deploy-mode cluster \
-  --name AtgxTransform \
+  --name TRANSFORM_DATA \
   --class org.bdgenomics.adam.cli.ADAMMain \
   --num-executors $(($num_nodes * ($num_vcores / $executor_vcores) - 1))  \
   --driver-memory 2g \

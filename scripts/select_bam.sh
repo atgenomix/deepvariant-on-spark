@@ -200,7 +200,7 @@ done
 
 for p in ${pids}; do
   if wait ${p}; then
-    str_time=print_time ${T0}
+    str_time=$( print_time ${T0} )
     echo "[INFO] select_bam ${p} completed: " ${str_time}
   else
     echo "########################################################################################"

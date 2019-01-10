@@ -81,19 +81,18 @@ ${spark} \
       ${alignment_parquet} \
       -force_load_bam -atgx_transform -parquet_compression_codec SNAPPY
 
-str_time=$( print_time ${T0} )
-
 if [[ $? != 0 ]]; then
-    echo "###########################################################"
-    echo
-    echo "[ERROR] transform_data failed: $?"
-    echo
-    echo "###########################################################"
-    exit -1
+  echo "###########################################################"
+  echo
+  echo "[ERROR] transform_data failed: $?"
+  echo
+  echo "###########################################################"
+  exit -1
 else
-    echo "###########################################################"
-    echo
-    echo "[INFO] transform_data completed: " ${str_time}
-    echo
-    echo "###########################################################"
+  str_time=$( print_time ${T0} )
+  echo "###########################################################"
+  echo
+  echo "[INFO] transform_data completed: " ${str_time}
+  echo
+  echo "###########################################################"
 fi

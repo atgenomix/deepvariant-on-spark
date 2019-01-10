@@ -70,7 +70,7 @@ fi
 ##########################################################################################
 T0=$(date +%s)
 # transform_data
-${dirname}/transform_data.sh ${input_bam} ${alignment_parquet}
+bash ${dirname}/transform_data.sh ${input_bam} ${alignment_parquet}
 
 if [[ $? != 0 ]]; then
     exit -1
@@ -81,7 +81,7 @@ exit 0
 ##########################################################################################
 T1=$(date +%s)
 # select_bam
-${dirname}\select_bam.sh ${alignment_parquet}
+bash ${dirname}/select_bam.sh ${alignment_parquet}
 
 if [[ $? != 0 ]]; then
     exit -1

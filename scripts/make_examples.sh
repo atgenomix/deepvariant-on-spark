@@ -53,7 +53,8 @@ T0=$(date +%s)
 # num-executors | executor-cores | executor-memory | containers |  Memory   | vCores  |   Time   |
 # ------------- | -------------- | --------------- | ---------- | --------- | ------- | -------- |
 #       78      |        2       |     1g(8g)      |            |      G    |         | 02:00:32 |
-#       31      |        2       |     1g(8g)      |            |      G    |         | 02:00:32 |
+#       31      |        2       |     1g(8g)      |     29     |   254G    |    57   |    --    |
+#       31      |        2       |     1g(7g)      |     32     |   250G    |    63   | 01:56:22 |
 
 # make_examples
 ${spark} \
@@ -73,7 +74,7 @@ ${spark} \
   --conf spark.kryo.registrator=net.vartotal.piper.serialization.ADAMKryoRegistrator \
   --conf spark.speculation=true \
   --conf spark.hadoop.validateOutputSpecs=false \
-  --conf spark.yarn.executor.memoryOverhead=8g \
+  --conf spark.yarn.executor.memoryOverhead=7g \
   /usr/local/seqslab/PiedPiper/target/PiedPiper.jar \
   bam2vcf \
       --caller-type make_example \

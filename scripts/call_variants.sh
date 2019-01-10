@@ -52,8 +52,8 @@ T0=$(date +%s)
 # Cluster : n1_highmem_16 x 4
 # num-executors | executor-cores | executor-memory | containers |  Memory   | vCores  |   Time   |
 # ------------- | -------------- | --------------- | ---------- | --------- | ------- | -------- |
-#       78      |        2       |     1g(8g)      |            |      G    |         | 02:00:32 |
-#       31      |        2       |     1g(8g)      |            |      G    |         | 02:00:32 |
+#       78      |        2       |     1g(8g)      |            |      G    |         |     --   |
+#       31      |        2       |     1g(7g)      |            |      G    |         |     ??   |
 
 ${spark} \
   --master yarn \
@@ -72,7 +72,7 @@ ${spark} \
   --conf spark.kryo.registrator=net.vartotal.piper.serialization.ADAMKryoRegistrator \
   --conf spark.speculation=true \
   --conf spark.hadoop.validateOutputSpecs=false \
-  --conf spark.yarn.executor.memoryOverhead=8g \
+  --conf spark.yarn.executor.memoryOverhead=7g \
   /usr/local/seqslab/PiedPiper/target/PiedPiper.jar \
   bam2vcf \
       --caller-type call_variants \

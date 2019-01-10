@@ -14,7 +14,7 @@ FAIL='FAIL'
 spark=/usr/bin/spark-submit
 alignment_parquet=hdfs:///$output_folder/alignment.parquet
 alignment_bam=hdfs:///$output_folder/alignment.bam
-make_example_out=hdfs:///$output_folder/examples
+make_examples_out=hdfs:///$output_folder/examples
 call_variants_out=hdfs:///$output_folder/variants
 postprocess_variants_out=hdfs:///$output_folder/vcf
 bed_path=hdfs:///bed/${ref_version}/contiguous_unmasked_regions_156_parts
@@ -91,7 +91,7 @@ print_time "select_bam" ${T1} ${T2}
 
 ##########################################################################################
 # make_examples
-bash ${dirname}/make_examples.sh ${alignment_bam} ${bed_path} ${ref_version} ${contig_style} ${make_example_out}
+# bash ${dirname}/make_examples.sh ${alignment_bam} ${bed_path} ${ref_version} ${contig_style} ${make_examples_out}
 
 if [[ $? != 0 ]]; then
     exit -1
@@ -100,91 +100,19 @@ fi
 T3=$(date +%s)
 print_time "make_examples" ${T2} ${T3}
 
-exit 0
+
+##########################################################################################
 # make_examples
-${spark} \
-  --master yarn \
-  --deploy-mode cluster \
-  --name make_examples \
-  --class net.vartotal.piper.cli.PiperMain \
-  --num-executors 78 \
-  --driver-memory 1g \
-  --driver-cores 1 \
-  --executor-memory 1g \
-  --executor-cores 2 \
-  --queue default \
-  --conf spark.executor.extraJavaOptions=-XX:+UseG1GC \
-  --conf spark.dynamicAllocation.minExecutors=1 \
-  --conf spark.serializer=org.apache.spark.serializer.KryoSerializer \
-  --conf spark.kryo.registrator=net.vartotal.piper.serialization.ADAMKryoRegistrator \
-  --conf spark.speculation=true \
-  --conf spark.hadoop.validateOutputSpecs=false \
-  --conf spark.yarn.executor.memoryOverhead=8g \
-  /usr/local/seqslab/PiedPiper/target/PiedPiper.jar \
-  bam2vcf \
-      --caller-type make_example \
-      --piper-script /usr/local/seqslab/SeqPiper/script/Bam2VcfPiperDeepVariantME.py \
-      --bam-input-path ${alignment_bam}/bam \
-      --vcf-output-path ${make_example_out} \
-      --bam-partition-bed-path ${bed_path} \
-      --reference-version ${ref_version} \
-      --workflow-type 1 \
-      --is-pcr-free 0 \
-      --extra-params '' \
-      --reference-system ${contig_style} \
-      --platform-type illumina \
-      --java-mem-in-mb 5120
+bash ${dirname}/call_variants.sh ${make_examples_out} ${bed_path} ${ref_version} ${contig_style} ${call_variants_out}
 
 if [[ $? != 0 ]]; then
-    echo "###########################################################"
-    echo
-    echo "make_example failed"
-    echo
-    echo "###########################################################"
     exit -1
 fi
 
-${spark} \
-  --master yarn \
-  --deploy-mode cluster \
-  --name call_variants \
-  --class net.vartotal.piper.cli.PiperMain \
-  --num-executors 78 \
-  --driver-memory 1g \
-  --driver-cores 1 \
-  --executor-memory 1g \
-  --executor-cores 2 \
-  --queue default \
-  --conf spark.executor.extraJavaOptions=-XX:+UseG1GC \
-  --conf spark.dynamicAllocation.minExecutors=1 \
-  --conf spark.serializer=org.apache.spark.serializer.KryoSerializer \
-  --conf spark.kryo.registrator=net.vartotal.piper.serialization.ADAMKryoRegistrator \
-  --conf spark.speculation=true \
-  --conf spark.hadoop.validateOutputSpecs=false \
-  --conf spark.yarn.executor.memoryOverhead=8g \
-  /usr/local/seqslab/PiedPiper/target/PiedPiper.jar \
-  bam2vcf \
-      --caller-type call_variants \
-      --piper-script /usr/local/seqslab/SeqPiper/script/Bam2VcfPiperDeepVariantCV.py \
-      --bam-input-path ${make_example_out} \
-      --vcf-output-path ${call_variants_out} \
-      --bam-partition-bed-path ${bed_path} \
-      --reference-version ${ref_version} \
-      --workflow-type 1 \
-      --is-pcr-free 0 \
-      --extra-params '' \
-      --reference-system ${contig_style} \
-      --platform-type illumina \
-      --java-mem-in-mb 5120
+T4=$(date +%s)
+print_time "make_examples" ${T3} ${T4}
 
-if [[ $? != 0 ]]; then
-    echo "###########################################################"
-    echo
-    echo "call_variant failed"
-    echo
-    echo "###########################################################"
-    exit -1
-fi
+exit 0
 
 ${spark} \
   --master yarn \
@@ -208,7 +136,7 @@ ${spark} \
   bam2vcf \
       --caller-type postprocess_variants \
       --piper-script /usr/local/seqslab/SeqPiper/script/Bam2VcfPiperDeepVariantPP.py \
-      --bam-input-path ${make_example_out} \
+      --bam-input-path ${make_examples_out} \
       --normal-bam-input-path ${call_variants_out} \
       --vcf-output-path ${postprocess_variants_out} \
       --bam-partition-bed-path ${bed_path} \

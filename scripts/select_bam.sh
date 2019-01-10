@@ -33,7 +33,7 @@ print_time () {
   now=$(date +%s)
   diff=$(($now - $1))
   str_diff=`date +%H:%M:%S -ud @${diff}`
-  return ${str_diff}
+  echo ${str_diff}
 }
 
 # argument check
@@ -200,32 +200,14 @@ done
 
 for p in ${pids}; do
   if wait ${p}; then
-    echo "BamSelector Process ${p} success"
+    str_time=print_time ${T0}
+    echo "[INFO] select_bam ${p} completed: " ${str_time}
   else
-    echo "###########################################################"
+    echo "########################################################################################"
     echo
-    echo "BamSelector Process ${p} fail"
+    echo "[ERROR] select_bam ${p} failed: Please go to Hadoop Cluster Portal for more detail"
     echo
-    echo "###########################################################"
+    echo "########################################################################################"
     exit -1
-
   fi
 done
-
-
-str_time=print_time ${T0}
-
-if [[ $? != 0 ]]; then
-    echo "###########################################################"
-    echo
-    echo "[ERROR] transform_data failed: $?"
-    echo
-    echo "###########################################################"
-    exit -1
-else
-    echo "###########################################################"
-    echo
-    echo "[INFO] transform_data completed: " ${str_time}
-    echo
-    echo "###########################################################"
-fi

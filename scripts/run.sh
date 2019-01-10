@@ -30,7 +30,7 @@ usage() {
   echo $'\t' "<Reference Version>: [ 19 | 38 ]"
   echo $'\t' "<Contig Style>: [ HG | GRCH ]"
   echo "Examples: "
-  echo $'\t' "./run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam output 19 GRCH"
+  echo $'\t' "$0 gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam output 19 GRCH"
   return
 }
 

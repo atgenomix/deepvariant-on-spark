@@ -168,7 +168,8 @@ fi
 T0=$(date +%s)
 # num-executors | executor-cores | executor-memory | containers |  Memory   | vCores  |   Time   |
 # ------------- | -------------- | --------------- | ---------- | --------- | ------- | -------- |
-#        5      |        2       |         7g      |      6     |   280G    |   11    | 00:43:20 |
+#        5      |        2       |         7g      |     33     |   234G    |    61   | 00:00:39 |
+#        5      |        2       |        10g      |     33     |   234G    |    61   | 00:00:39 |
 
 pids=""
 
@@ -184,7 +185,7 @@ do
   --driver-memory 1g \
   --num-executors 5 \
   --executor-cores 2 \
-  --executor-memory 7g \
+  --executor-memory 10g \
   --conf spark.hadoop.validateOutputSpecs=false \
   --conf spark.hadoop.dfs.replication=1 \
   --conf spark.dynamicAllocation.enabled=false \

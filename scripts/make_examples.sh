@@ -42,8 +42,8 @@ print_time () {
 
 # argument check
 #########################################################################################
-if [[ $# -ne 4 ]]; then
-  echo "[ERROR] Illegal number of parameters (Expected: 4, Actual: $#)"
+if [[ $# -ne 5 ]]; then
+  echo "[ERROR] Illegal number of parameters (Expected: 5, Actual: $#)"
   usage $0
   exit -1
 fi

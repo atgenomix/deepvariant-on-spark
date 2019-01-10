@@ -166,6 +166,9 @@ elif [[ ${ref_version} == "19" ]]; then
 fi
 
 T0=$(date +%s)
+# num-executors | executor-cores | executor-memory | containers |  Memory   | vCores  |   Time   |
+# ------------- | -------------- | --------------- | ---------- | --------- | ------- | -------- |
+#        5      |        2       |         7g      |      6     |   280G    |   11    | 00:43:20 |
 
 pids=""
 

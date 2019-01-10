@@ -91,7 +91,7 @@ print_time "select_bam" ${T1} ${T2}
 
 ##########################################################################################
 # make_examples
-bash ${dirname}/make_examples.sh ${alignment_bam} ${bed_path} ${contig_style} ${make_example_out}
+bash ${dirname}/make_examples.sh ${alignment_bam} ${bed_path} ${ref_version} ${contig_style} ${make_example_out}
 
 if [[ $? != 0 ]]; then
     exit -1

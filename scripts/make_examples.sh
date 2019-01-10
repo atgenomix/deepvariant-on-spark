@@ -4,8 +4,9 @@
 #########################################################################################
 alignment_bam=$1
 bed_path=$2
-contig_style=$3
-make_example_out=$4
+ref_version=$3
+contig_style=$4
+make_example_out=$5
 
 # variables
 #########################################################################################
@@ -20,14 +21,15 @@ num_nodes=`curl http://localhost:8088/ws/v1/cluster/metrics | \
 #########################################################################################
 usage() {
   echo "Usage:"
-  echo $'\t' "$0 <Selected BAM folder> <BED folder> <Contig Type> <Output Folder> "
+  echo $'\t' "$0 <Selected BAM folder> <BED folder> <Reference Version> <Contig Type> <Output Folder> "
   echo "Parameters:"
   echo $'\t' "<Alignment Folder>: the output folder of transform_data.sh"
   echo $'\t' "<BED folder>: the bed file for Adaptive Data Parallelization (ADP)"
   echo $'\t' "<Reference Version>: [ 19 | 38 ]"
+  echo $'\t' "<Contig Style>: [ HG | GRCH ]"
   echo $'\t' "<Output Folder>: the output folder on HDFS"
   echo "Examples: "
-  echo $'\t' "$0 output_HG002/alignment.bam /bed/19/contiguous_unmasked_regions_156_parts GRCH output_HG002/examples"
+  echo $'\t' "$0 output_HG002/alignment.bam /bed/19/contiguous_unmasked_regions_156_parts 19 GRCH output_HG002/examples"
   return
 }
 

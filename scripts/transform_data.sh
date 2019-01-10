@@ -45,6 +45,7 @@ fi
 # main
 ##########################################################################################
 T0=$(date +%s)
+# Cluster : n1_highmem_16 x 4
 # num-executors | executor-cores | executor-memory | containers |  Memory   | vCores  |   Time   |
 # ------------- | -------------- | --------------- | ---------- | --------- | ------- | -------- |
 #       10      |        4       |        35g      |      9     |   280G    |    9    | 00:43:20 |
@@ -63,7 +64,7 @@ ${spark} \
   --deploy-mode cluster \
   --name TRANSFORM_DATA \
   --class org.bdgenomics.adam.cli.ADAMMain \
-  --num-executors $(($num_nodes * ($num_vcores / $executor_vcores) - 1))  \
+  --num-executors $(( ($num_vcores / $executor_vcores) - 1 ))  \
   --driver-memory 2g \
   --driver-cores 1 \
   --executor-cores ${executor_vcores} \

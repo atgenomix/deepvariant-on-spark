@@ -14,9 +14,9 @@ FAIL='FAIL'
 spark=/usr/bin/spark-submit
 alignment_parquet=hdfs:///$output_folder/alignment.parquet
 alignment_bam=hdfs:///$output_folder/alignment.bam
-make_example_dir=hdfs:///$output_folder/examples
-call_variants_dir=hdfs:///$output_folder/variant
-postprocess_variants_dir=hdfs:///$output_folder/vcf
+make_example_out=hdfs:///$output_folder/examples
+call_variants_out=hdfs:///$output_folder/variants
+postprocess_variants_out=hdfs:///$output_folder/vcf
 bed_path=hdfs:///bed/${ref_version}/contiguous_unmasked_regions_156_parts
 executor_vcores=2
 num_vcores=`curl http://localhost:8088/ws/v1/cluster/metrics | \
@@ -29,14 +29,14 @@ dirname=`dirname $0`
 #########################################################################################
 usage() {
   echo "Usage:"
-  echo $'\t' "$0 <Input BAM> <Output Folder> <Reference Version> <Contig Style>"
+  echo $'\t' "$0 <Input BAM> <Reference Version> <Contig Style> <Output Folder>"
   echo "Parameters:"
   echo $'\t' "<Input BAM>: the input bam file from Google Strorage or HDFS"
-  echo $'\t' "<Output Folder>: the output folder on HDFS"
   echo $'\t' "<Reference Version>: [ 19 | 38 ]"
   echo $'\t' "<Contig Style>: [ HG | GRCH ]"
+  echo $'\t' "<Output Folder>: the output folder on HDFS"
   echo "Examples: "
-  echo $'\t' "$0 gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam output 19 GRCH"
+  echo $'\t' "$0 gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH output_HG002 "
   return
 }
 
@@ -77,65 +77,30 @@ if [[ $? != 0 ]]; then
 fi
 
 T1=$(date +%s)
-print_time "transform_data" $T0 $T1
+print_time "transform_data" ${T0} ${T1}
 ##########################################################################################
 # select_bam
-bash ${dirname}/select_bam.sh ${alignment_parquet} ${ref_version} ${alignment_bam}
+# bash ${dirname}/select_bam.sh ${alignment_parquet} ${ref_version} ${alignment_bam}
 
 if [[ $? != 0 ]]; then
     exit -1
 fi
 
 T2=$(date +%s)
-print_time "select_bam" $T1 $T2
+print_time "select_bam" ${T1} ${T2}
+
+##########################################################################################
+# make_examples
+bash ${dirname}/make_examples.sh ${alignment_bam} ${bed_path} ${contig_style} ${make_example_out}
+
+if [[ $? != 0 ]]; then
+    exit -1
+fi
+
+T3=$(date +%s)
+print_time "make_examples" ${T2} ${T3}
 
 exit 0
-
-pids=""
-
-for i in ${!partition_array[@]};
-do
-  # echo ${i} --- ${partition_array[${i}]}
-  ${spark} \
-  --master yarn \
-  --deploy-mode cluster \
-  --class net.vartotal.piper.cli.PiperMain \
-  --name SELECTOR-${i} \
-  --driver-cores 1 \
-  --driver-memory 1g \
-  --num-executors 5 \
-  --executor-cores 2 \
-  --executor-memory 7g \
-  --conf spark.hadoop.validateOutputSpecs=false \
-  --conf spark.hadoop.dfs.replication=1 \
-  --conf spark.dynamicAllocation.enabled=false \
-  --conf spark.serializer=org.apache.spark.serializer.KryoSerializer \
-  --conf spark.kryo.registrator=org.bdgenomics.adam.serialization.ADAMKryoRegistrator \
-  --conf spark.executor.extraClassPath=/usr/local/seqslab/PiedPiper/target/PiedPiper.jar \
-  /usr/local/seqslab/PiedPiper/target/PiedPiper.jar \
-  newPosBinSelector \
-      -i ${alignment_parquet} \
-      -o ${alignment_bam} \
-      -f bam \
-      ${partition_array[${i}]} &
-
-  pids+=" $!"
-done
-
-for p in ${pids}; do
-  if wait ${p}; then
-    echo "BamSelector Process ${p} success"
-  else
-    echo "###########################################################"
-    echo
-    echo "BamSelector Process ${p} fail"
-    echo
-    echo "###########################################################"
-    exit -1
-
-  fi
-done
-
 # make_examples
 ${spark} \
   --master yarn \
@@ -160,7 +125,7 @@ ${spark} \
       --caller-type make_example \
       --piper-script /usr/local/seqslab/SeqPiper/script/Bam2VcfPiperDeepVariantME.py \
       --bam-input-path ${alignment_bam}/bam \
-      --vcf-output-path ${make_example_dir} \
+      --vcf-output-path ${make_example_out} \
       --bam-partition-bed-path ${bed_path} \
       --reference-version ${ref_version} \
       --workflow-type 1 \
@@ -201,8 +166,8 @@ ${spark} \
   bam2vcf \
       --caller-type call_variants \
       --piper-script /usr/local/seqslab/SeqPiper/script/Bam2VcfPiperDeepVariantCV.py \
-      --bam-input-path ${make_example_dir} \
-      --vcf-output-path ${call_variants_dir} \
+      --bam-input-path ${make_example_out} \
+      --vcf-output-path ${call_variants_out} \
       --bam-partition-bed-path ${bed_path} \
       --reference-version ${ref_version} \
       --workflow-type 1 \
@@ -243,9 +208,9 @@ ${spark} \
   bam2vcf \
       --caller-type postprocess_variants \
       --piper-script /usr/local/seqslab/SeqPiper/script/Bam2VcfPiperDeepVariantPP.py \
-      --bam-input-path ${make_example_dir} \
-      --normal-bam-input-path ${call_variants_dir} \
-      --vcf-output-path ${postprocess_variants_dir} \
+      --bam-input-path ${make_example_out} \
+      --normal-bam-input-path ${call_variants_out} \
+      --vcf-output-path ${postprocess_variants_out} \
       --bam-partition-bed-path ${bed_path} \
       --reference-version ${ref_version} \
       --workflow-type 1 \

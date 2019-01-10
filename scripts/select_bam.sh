@@ -166,10 +166,15 @@ elif [[ ${ref_version} == "19" ]]; then
 fi
 
 T0=$(date +%s)
+# Cluster : n1_highmem_16 x 4
 # num-executors | executor-cores | executor-memory | containers |  Memory   | vCores  |   Time   |
 # ------------- | -------------- | --------------- | ---------- | --------- | ------- | -------- |
-#        5      |        2       |         7g      |     33     |   234G    |    61   | 00:00:39 |
-#        5      |        2       |        10g      |     33     |   234G    |    61   | 00:00:39 |
+#        5      |        2       |         7g      |     30     |   220G    |    55   | 00:19:32 |
+#        5      |        2       |        10g      |     30     |   285G    |    55   | 00:18:51 |
+#        7      |        2       |         7g      |     33     |   234G    |    61   | 00:18:09*|
+#        7      |        2       |        10g      |     33     |   318G    |   61(2) | 00:18:28 |
+#        8      |        3       |        15g      |     11     |   112G    |    23   |   -----  |
+#       12      |        2       |        10g      |     33     |   318G    |    61   | 00:17:51 |
 
 pids=""
 
@@ -183,9 +188,9 @@ do
   --name SELECT_BAM-${i} \
   --driver-cores 1 \
   --driver-memory 1g \
-  --num-executors 5 \
-  --executor-cores 2 \
-  --executor-memory 10g \
+  --num-executors $(( ${num_vcores} / ${executor_vcores} / 5 )) \
+  --executor-cores ${executor_vcores} \
+  --executor-memory 7g \
   --conf spark.hadoop.validateOutputSpecs=false \
   --conf spark.hadoop.dfs.replication=1 \
   --conf spark.dynamicAllocation.enabled=false \

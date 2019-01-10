@@ -32,7 +32,7 @@ print_time () {
   now=$(date +%s)
   diff=$(($now - $1))
   str_diff=`date +%H:%M:%S -ud @${diff}`
-  return ${str_diff}
+  echo ${str_diff}
 }
 
 # argument check

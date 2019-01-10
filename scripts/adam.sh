@@ -10,13 +10,11 @@ output_folder=$4
 # variables
 #########################################################################################
 spark=/usr/bin/spark-submit
-#time=`date +"%s"`
-time=$output_folder
-alignment_parquet=hdfs:///${time}-alignment.parquet
-alignment_bam=hdfs:///${time}-alignment.bam
-make_example_dir=hdfs:///${time}-dv-I
-call_variants_dir=hdfs:///${time}-dv-II
-postprocess_variants_dir=hdfs:///${time}-dv-III
+alignment_parquet=hdfs:///$output_folder/alignment.parquet
+alignment_bam=hdfs:///$output_folder/alignment.bam
+make_example_dir=hdfs:///$output_folder/examples
+call_variants_dir=hdfs:///$output_folder/tfrecord
+postprocess_variants_dir=hdfs:///variant
 bed_path=hdfs:///bed/${ref_version}/contiguous_unmasked_regions_156_parts
 
 # functions

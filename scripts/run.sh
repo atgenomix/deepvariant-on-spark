@@ -80,7 +80,7 @@ T1=$(date +%s)
 print_time "transform_data" $T0 $T1
 ##########################################################################################
 # select_bam
-bash ${dirname}/select_bam.sh ${alignment_parquet}
+bash ${dirname}/select_bam.sh ${alignment_parquet} ${ref_version} ${alignment_bam}
 
 if [[ $? != 0 ]]; then
     exit -1

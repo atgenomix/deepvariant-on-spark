@@ -2,7 +2,7 @@
 
 # arguments
 #########################################################################################
-make_example_out=$1
+make_examples_out=$1
 bed_path=$2
 ref_version=$3
 contig_style=$4
@@ -54,7 +54,7 @@ T0=$(date +%s)
 # num-executors | executor-cores | executor-memory | containers |  Memory   | vCores  |   Time   |
 # ------------- | -------------- | --------------- | ---------- | --------- | ------- | -------- |
 #       78      |        2       |     1g(8g)      |            |      G    |         |     --   |
-#       31      |        2       |     1g(7g)      |     32     |   250G    |    63   |     ??   |
+#       31      |        2       |     1g(7g)      |     32     |   250G    |    63   | 00:04:15 |
 
 ${spark} \
   --master yarn \

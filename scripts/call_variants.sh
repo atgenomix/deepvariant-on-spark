@@ -53,7 +53,7 @@ T0=$(date +%s)
 # num-executors | executor-cores | executor-memory | containers |  Memory   | vCores  |   Time   |
 # ------------- | -------------- | --------------- | ---------- | --------- | ------- | -------- |
 #       78      |        2       |     1g(8g)      |            |      G    |         |     --   |
-#       31      |        2       |     1g(7g)      |     32     |   250G    |    63   |     ??   |
+#       31      |        2       |     1g(7g)      |     32     |   250G    |    63   | 06:23:40*|
 
 ${spark} \
   --master yarn \

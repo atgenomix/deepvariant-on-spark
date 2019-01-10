@@ -90,8 +90,8 @@ Step                               | 2-Workers cluster | 4-Workers Cluster | 8-W
 `transform_data`                   |                   | 36m 08s           |                   |                    |
 `select_bam`                       |                   | 18m 09s           |                   |                    |
 `make_examples`                    |                   | 1h 57m 22s        |                   |                    |
-`call_variants`                    |                   |                   |                   |                    |
-`postprocess_variants` (no gVCF)   |                   |                   |                   |                    |
+`call_variants`                    |                   | 6h 23m 40s        |                   |                    |
+`postprocess_variants` (no gVCF)   |                   | 4m 15s            |                   |                    |
 `postprocess_variants` (with gVCF) | 55m 47s           |                   |                   |                    |
 Total time                         | 5h 33m - 6h 07m   |                   |                   |                    |
 

@@ -8,7 +8,6 @@ alignment_parquet=$2
 # constant & variables
 #########################################################################################
 spark=/usr/bin/spark-submit
-alignment_parquet=hdfs:///$output_folder/alignment.parquet
 executor_vcores=4
 num_vcores=`curl http://localhost:8088/ws/v1/cluster/metrics | \
             python -c "import sys, json; print json.load(sys.stdin)['clusterMetrics']['totalVirtualCores']"`

@@ -176,7 +176,7 @@ do
   --master yarn \
   --deploy-mode cluster \
   --class net.vartotal.piper.cli.PiperMain \
-  --name SELECTOR-${i} \
+  --name SELECT_BAM-${i} \
   --driver-cores 1 \
   --driver-memory 1g \
   --num-executors 5 \

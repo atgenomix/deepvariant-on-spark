@@ -77,40 +77,61 @@ if [[ $? != 0 ]]; then
 fi
 
 T1=$(date +%s)
-print_time "transform_data" ${T0} ${T1}
 ##########################################################################################
 # select_bam
 # bash ${dirname}/select_bam.sh ${alignment_parquet} ${ref_version} ${alignment_bam}
 
 if [[ $? != 0 ]]; then
-    exit -1
+  print_time "transform_data" ${T0} ${T1}
+  exit -1
 fi
 
 T2=$(date +%s)
-print_time "select_bam" ${T1} ${T2}
 
 ##########################################################################################
 # make_examples
 # bash ${dirname}/make_examples.sh ${alignment_bam} ${bed_path} ${ref_version} ${contig_style} ${make_examples_out}
 
 if [[ $? != 0 ]]; then
-    exit -1
+  print_time "transform_data" ${T0} ${T1}
+  print_time "select_bam" ${T1} ${T2}
+  exit -1
 fi
 
 T3=$(date +%s)
-print_time "make_examples" ${T2} ${T3}
 
 
 ##########################################################################################
-# make_examples
-bash ${dirname}/call_variants.sh ${make_examples_out} ${bed_path} ${ref_version} ${contig_style} ${call_variants_out}
+# call_variants
+# bash ${dirname}/call_variants.sh ${make_examples_out} ${bed_path} ${ref_version} ${contig_style} ${call_variants_out}
 
 if [[ $? != 0 ]]; then
-    exit -1
+  print_time "transform_data" ${T0} ${T1}
+  print_time "select_bam" ${T1} ${T2}
+  print_time "make_examples" ${T2} ${T3}
+  exit -1
 fi
 
 T4=$(date +%s)
-print_time "make_examples" ${T3} ${T4}
+
+##########################################################################################
+# postprocess_variants
+bash ${dirname}/postprocess_variants.sh ${make_examples_out} ${bed_path} ${ref_version} ${contig_style} ${call_variants_out} ${postprocess_variants_out}
+
+if [[ $? != 0 ]]; then
+  print_time "transform_data" ${T0} ${T1}
+  print_time "select_bam" ${T1} ${T2}
+  print_time "make_examples" ${T2} ${T3}
+  print_time "call_variants" ${T3} ${T4}
+  exit -1
+fi
+
+T5=$(date +%s)
+print_time "transform_data" ${T0} ${T1}
+print_time "select_bam" ${T1} ${T2}
+print_time "make_examples" ${T2} ${T3}
+print_time "call_variants" ${T3} ${T4}
+print_time "postprocess_variants" ${T4} ${T5}
 
 exit 0
 
@@ -131,7 +152,7 @@ ${spark} \
   --conf spark.kryo.registrator=net.vartotal.piper.serialization.ADAMKryoRegistrator \
   --conf spark.speculation=true \
   --conf spark.hadoop.validateOutputSpecs=false \
-  --conf spark.yarn.executor.memoryOverhead=8g \
+  --conf spark.yarn.executor.memoryOverhead=7g \
   /usr/local/seqslab/PiedPiper/target/PiedPiper.jar \
   bam2vcf \
       --caller-type postprocess_variants \

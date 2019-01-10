@@ -7,7 +7,7 @@ bed_path=$2
 ref_version=$3
 contig_style=$4
 call_variants_out=$5
-
+postprocess_variants_out=$6
 # variables
 #########################################################################################
 spark=/usr/bin/spark-submit
@@ -21,15 +21,16 @@ num_nodes=`curl http://localhost:8088/ws/v1/cluster/metrics | \
 #########################################################################################
 usage() {
   echo "Usage:"
-  echo $'\t' "$0 <Example folder> <BED folder> <Reference Version> <Contig Style> <Output Folder> "
+  echo $'\t' "$0 <Example folder> <BED folder> <Reference Version> <Contig Style> <Variant Folder> <Output Folder> "
   echo "Parameters:"
   echo $'\t' "<Example folder>: the output folder of make_examples"
   echo $'\t' "<BED folder>: the bed file for Adaptive Data Parallelization (ADP)"
   echo $'\t' "<Reference Version>: [ 19 | 38 ]"
   echo $'\t' "<Contig Style>: [ HG | GRCH ]"
+  echo $'\t' "<Variant folder>: the output folder of call_variants"
   echo $'\t' "<Output Folder>: the output folder on HDFS"
   echo "Examples: "
-  echo $'\t' "$0 output_HG002/examples /bed/19/contiguous_unmasked_regions_156_parts 19 GRCH output_HG002/variants"
+  echo $'\t' "$0 output_HG002/examples /bed/19/contiguous_unmasked_regions_156_parts 19 GRCH output_HG002/variants output_HG002/vcf"
   return
 }
 
@@ -42,8 +43,8 @@ print_time () {
 
 # argument check
 #########################################################################################
-if [[ $# -ne 5 ]]; then
-  echo "[ERROR] Illegal number of parameters (Expected: 5, Actual: $#)"
+if [[ $# -ne 6 ]]; then
+  echo "[ERROR] Illegal number of parameters (Expected: 6, Actual: $#)"
   usage $0
   exit -1
 fi
@@ -75,10 +76,11 @@ ${spark} \
   --conf spark.yarn.executor.memoryOverhead=7g \
   /usr/local/seqslab/PiedPiper/target/PiedPiper.jar \
   bam2vcf \
-      --caller-type call_variants \
-      --piper-script /usr/local/seqslab/SeqPiper/script/Bam2VcfPiperDeepVariantCV.py \
-      --bam-input-path ${make_example_out} \
-      --vcf-output-path ${call_variants_out} \
+      --caller-type postprocess_variants \
+      --piper-script /usr/local/seqslab/SeqPiper/script/Bam2VcfPiperDeepVariantPP.py \
+      --bam-input-path ${make_examples_out} \
+      --normal-bam-input-path ${call_variants_out} \
+      --vcf-output-path ${postprocess_variants_out} \
       --bam-partition-bed-path ${bed_path} \
       --reference-version ${ref_version} \
       --workflow-type 1 \

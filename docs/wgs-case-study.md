@@ -87,11 +87,11 @@ It took us about 15min to copy the files.
 
 Step                               | 2-Workers cluster | 4-Workers Cluster | 8-Workers Cluster | 16-Workers Cluster |
 ---------------------------------- | ----------------- | ----------------- | ----------------- | ------------------ |
-`ADAM transform`                   | 1h 45m 46s        |                   |                   |                    |
-`BAM Selector`                     |                   |                   |                   |                    |
-`make_examples`                    | 1h 45m 46s        |                   |                   |                    |
-`call_variants`                    | 3h 25m 38s        |                   |                   |                    |
-`postprocess_variants` (no gVCF)   | 21m 33s           |                   |                   |                    |
+`transform_data`                   |                   | 36m 08s           |                   |                    |
+`select_bam`                       |                   | 18m 09s           |                   |                    |
+`make_examples`                    |                   | 1h 57m 22s        |                   |                    |
+`call_variants`                    |                   |                   |                   |                    |
+`postprocess_variants` (no gVCF)   |                   |                   |                   |                    |
 `postprocess_variants` (with gVCF) | 55m 47s           |                   |                   |                    |
 Total time                         | 5h 33m - 6h 07m   |                   |                   |                    |
 

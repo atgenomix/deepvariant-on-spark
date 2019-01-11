@@ -82,13 +82,19 @@ user@my-dos-m:~$ hadoop fs -du -h /output
 
 ## Performance Evaluation
 
+DeepVariant-on-Spark leverage Apache Spark to support distributed
+computation, so it can be easily scaled out. Here, we try to run the
+whole pipeline in clusters with different numbers of nodes and observe
+the performance improvement.
+
 Step                   | 2-Workers cluster | 4-Workers Cluster | 8-Workers Cluster | 16-Workers Cluster |
 ---------------------- | ----------------- | ----------------- | ----------------- | ------------------ |
-`transform_data`       |                   |    36m 08s        |     23m 12s       |      17m 22s       |
-`select_bam`           |                   |    18m 09s        |     11m 53s       |      10m 54s       |
-`make_examples`        |                   | 1h 57m 22s        |  1h 04m 05s       |      47m 47s       |
-`call_variants`        |                   | 6h 23m 40s        |  3h 37m 06s       |   2h 59m 41s       |
-`postprocess_variants` |                   |     4m 15s        |      2m 49s       |      02m 05s       |
-Total time             |                   | 9h 24m            |  5h 19m           |   4h 18m           |
+`transform_data`       | 1h 09m 25s        |    36m 08s        |    23m 12s        |    17m 22s         |
+`select_bam`           |    35m 13s        |    18m 09s        |    11m 53s        |    10m 54s         |
+`make_examples`        | 3h 44m 13s        | 1h 57m 22s        | 1h 04m 05s        |    47m 47s         |
+`call_variants`        |                   | 6h 23m 40s        | 3h 37m 06s        | 2h 59m 41s         |
+`postprocess_variants` |                   |     4m 15s        |     2m 49s        |    02m 05s         |
+Total time             |                   | 9h 24m            | 5h 19m            | 4h 18m             |
 
-
+*change the number of workers by `--num-workers N` in the command for
+cluster launch.

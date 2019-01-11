@@ -52,7 +52,7 @@ if [[ $# -ne 6 && $# -ne 7 ]]; then
   exit -1
 fi
 
-extra_params=""
+extra_params=" \\\" \\\" "
 
 if [[ $# -eq 7 ]]; then
   extra_params="\\\" --gvcf_outfile ${gvcf_out} \\\" "

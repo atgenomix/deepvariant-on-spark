@@ -80,7 +80,18 @@ user@my-dos-m:~$ hadoop fs -du -h /output
 101.1 M  /output/vcf
 ```
 
-### Run a WGS sample from Local Disk
+## Performance Evaluation
+
+Step                   | 2-Workers cluster | 4-Workers Cluster | 8-Workers Cluster | 16-Workers Cluster |
+---------------------- | ----------------- | ----------------- | ----------------- | ------------------ |
+`transform_data`       |                   |    36m 08s        |     23m 12s       |                    |
+`select_bam`           |                   |    18m 09s        |     11m 53s       |                    |
+`make_examples`        |                   | 1h 57m 22s        |  1h 04m 05s       |                    |
+`call_variants`        |                   | 6h 23m 40s        |  3h 37m 06s       |                    |
+`postprocess_variants` |                   |     4m 15s        |                   |                    |
+Total time             |                   | 9h 24m            |                   |                    |
+
+## Run a WGS sample from Local Disk
 
 ### Preliminaries
 
@@ -131,20 +142,3 @@ bash ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/i
 
 ```
 
-## Execution Time
-
-Step                               | 2-Workers cluster | 4-Workers Cluster | 8-Workers Cluster | 16-Workers Cluster |
----------------------------------- | ----------------- | ----------------- | ----------------- | ------------------ |
-`transform_data`                   |                   |    36m 08s        |                   |                    |
-`select_bam`                       |                   |    18m 09s        |                   |                    |
-`make_examples`                    |                   | 1h 57m 22s        |                   |                    |
-`call_variants`                    |                   | 6h 23m 40s        |                   |                    |
-`postprocess_variants` (no gVCF)   |                   |     4m 15s        |                   |                    |
-`postprocess_variants` (with gVCF) |                   |     4m 27s        |                   |                    |
-Total time                         |                   | 9h 24m            |                   |                    |
-
-## Delete Cluster
-
-```
-gcloud beta dataproc clusters delete my-deepvariant-on-spark
-```

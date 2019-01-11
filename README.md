@@ -1,7 +1,7 @@
 # DeepVariant-on-spark
 
-DeepVariant-on-Spark is an analysis pipeline that ports DeepVariant on
-Apache Spark for pipeline acceleration.
+DeepVariant-on-Spark is a germline short variant calling pipeline that runs DeepVariant on
+Apache Spark.
 
 ## Why DeepVariant-on-Spark
 
@@ -12,12 +12,12 @@ Apache Spark for pipeline acceleration.
     large-scale data processing. Apache Spark achieves high performance
     for both batch and streaming data, using a state-of-the-art DAG
     scheduler, a query optimizer, and a physical execution engine.
-*   DeepVariant (v0.7) hasn't support multiple GPUs yet. Through
-    DeepVariant-on-Spark, all of GPU resource can be fully utilized.
+*   DeepVariant (v0.7) hasn't supported multiple GPUs. Through
+    DeepVariant-on-Spark, all of GPU resources can be fully utilized across multiple nodes.
     For example, nVidia DGX-1 has 8 Tesla V100.
-*   DeepVariant-on-Spark leverages SeqPiper, a wrapper of Spark Piper,
-    to wrap DeepVariant in Spark and use Yarn to optimize resource
-    allocation in multi-tenant environment.
+*   DeepVariant-on-Spark leverages Atgenomix SeqPiper, a wrapper technology using Spark PipeRDD,
+    to parallelize DeepVariant pipeline on Spark and to use Yarn to optimize resource
+    allocation in multi-node environment.
 
 ## Documentation
 

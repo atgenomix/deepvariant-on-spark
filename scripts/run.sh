@@ -78,7 +78,7 @@ fi
 ##########################################################################################
 T0=$(date +%s)
 # transform_data
-# bash ${dirname}/transform_data.sh ${input_bam} ${alignment_parquet}
+bash ${dirname}/transform_data.sh ${input_bam} ${alignment_parquet}
 
 if [[ $? != 0 ]]; then
     exit -1
@@ -87,7 +87,7 @@ fi
 T1=$(date +%s)
 ##########################################################################################
 # select_bam
-# bash ${dirname}/select_bam.sh ${alignment_parquet} ${ref_version} ${alignment_bam}
+bash ${dirname}/select_bam.sh ${alignment_parquet} ${ref_version} ${alignment_bam}
 
 if [[ $? != 0 ]]; then
   print_time "transform_data" ${T0} ${T1}
@@ -98,7 +98,7 @@ T2=$(date +%s)
 
 ##########################################################################################
 # make_examples
-# bash ${dirname}/make_examples.sh ${alignment_bam} ${bed_path} ${ref_version} ${contig_style} ${make_examples_out}
+bash ${dirname}/make_examples.sh ${alignment_bam} ${bed_path} ${ref_version} ${contig_style} ${make_examples_out}
 
 if [[ $? != 0 ]]; then
   print_time "transform_data" ${T0} ${T1}
@@ -111,7 +111,7 @@ T3=$(date +%s)
 
 ##########################################################################################
 # call_variants
-# bash ${dirname}/call_variants.sh ${make_examples_out} ${bed_path} ${ref_version} ${contig_style} ${call_variants_out}
+bash ${dirname}/call_variants.sh ${make_examples_out} ${bed_path} ${ref_version} ${contig_style} ${call_variants_out}
 
 if [[ $? != 0 ]]; then
   print_time "transform_data" ${T0} ${T1}

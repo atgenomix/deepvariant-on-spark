@@ -84,61 +84,11 @@ user@my-dos-m:~$ hadoop fs -du -h /output
 
 Step                   | 2-Workers cluster | 4-Workers Cluster | 8-Workers Cluster | 16-Workers Cluster |
 ---------------------- | ----------------- | ----------------- | ----------------- | ------------------ |
-`transform_data`       |                   |    36m 08s        |     23m 12s       |                    |
-`select_bam`           |                   |    18m 09s        |     11m 53s       |                    |
-`make_examples`        |                   | 1h 57m 22s        |  1h 04m 05s       |                    |
-`call_variants`        |                   | 6h 23m 40s        |  3h 37m 06s       |                    |
-`postprocess_variants` |                   |     4m 15s        |                   |                    |
-Total time             |                   | 9h 24m            |                   |                    |
+`transform_data`       |                   |    36m 08s        |     23m 12s       |      17m 22s       |
+`select_bam`           |                   |    18m 09s        |     11m 53s       |      10m 54s       |
+`make_examples`        |                   | 1h 57m 22s        |  1h 04m 05s       |      47m 47s       |
+`call_variants`        |                   | 6h 23m 40s        |  3h 37m 06s       |   2h 59m 41s       |
+`postprocess_variants` |                   |     4m 15s        |      2m 49s       |      02m 05s       |
+Total time             |                   | 9h 24m            |  5h 19m           |   4h 18m           |
 
-## Run a WGS sample from Local Disk
-
-### Preliminaries
-
-Set a number of shell variables and create local directory structure, to
-make what follows easier to read and operate.
-
-```
-BASE="${HOME}/case-study"
-BUCKET="gs://deepvariant"
-BIN_VERSION="0.7.0"
-
-DATA_BUCKET="${BUCKET}/case-study-testdata"
-
-INPUT_DIR="${BASE}/input"
-DATA_DIR="${INPUT_DIR}/data"
-BAM="${DATA_DIR}/HG002_NIST_150bp_50x.bam"
-TRUTH_VCF="${DATA_DIR}/HG002_GRCh37_GIAB_highconf_CG-IllFB-IllGATKHC-Ion-10X-SOLID_CHROM1-22_v.3.3.2_highconf_triophased.vcf.gz"
-TRUTH_BED="${DATA_DIR}/HG002_GRCh37_GIAB_highconf_CG-IllFB-IllGATKHC-Ion-10X-SOLID_CHROM1-22_v.3.3.2_highconf_noincons"
-
-OUTPUT_DIR="${BASE}/output"
-OUTPUT_VCF="${OUTPUT_DIR}/HG002.output.vcf.gz"
-OUTPUT_GVCF="${OUTPUT_DIR}/HG002.output.g.vcf.gz"
-LOG_DIR="${OUTPUT_DIR}/logs"
-
-mkdir -p "${OUTPUT_DIR}"
-mkdir -p "${DATA_DIR}"
-mkdir -p "${LOG_DIR}"
-```
-
-### Prepare data
-
-```
-time gsutil -m cp -r "${DATA_BUCKET}/HG002_NIST_150bp_50x.bam" "${DATA_DIR}"
-```
-
-It took us about 15min to copy the files.
-
-### Submit a Spark job to execute DeepVariant in parallel
-
-```
-bash ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH output
-```
-
-
-### Result
-
-```
-
-```
 

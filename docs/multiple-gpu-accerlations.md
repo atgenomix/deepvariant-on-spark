@@ -25,14 +25,43 @@ gcloud beta dataproc clusters create my-dos \
 ```
 
 
+## Command Line
+
+Using [the same command](blob/master/docs/wgs-case-study.md#run-a-wgs-sample-from-google-storage-bucket)
+ to demonstrate the performance improvement by adding more GPUs.
+
+Since GPU acceleration is only leveraged by `call_variants` among the
+whole pipeline, you can use the following command to execute this step
+directly.
+
+```
+bash ./deepvariant-on-spark/script/call_variants.sh /output/examples /bed/19/contiguous_unmasked_regions_156_parts 19 GRCH /output/variants
+```
+
+### Usage
+
+More details is described as follows:
+
+```
+Usage:
+	 ./deepvariant-on-spark/scripts/call_variants.sh <Example folder> <BED folder> <Reference Version> <Contig Style> <Output Folder>
+Parameters:
+	 <Example folder>: the output folder of make_examples
+	 <BED folder>: the bed file for Adaptive Data Parallelization (ADP)
+	 <Reference Version>: [ 19 | 38 ]
+	 <Contig Style>: [ HG | GRCH ]
+	 <Output Folder>: the output folder on HDFS
+Examples:
+	 ./deepvariant-on-spark/scripts/call_variants.sh output_HG002/examples /bed/19/contiguous_unmasked_regions_156_parts 19 GRCH output_HG002/variants
+```
+
 ## Performance Comparision
 
-Step                               | Pure CPU cluster | 1-GPU Cluster | 2-GPU Cluster | 4-GPU Cluster |
----------------------------------- | ---------------- | ------------- | ------------- | ------------- |
-`transform_data`                   |    36m 08s       |               |               |               |
-`select_bam`                       |    18m 09s       |               |               |               |
-`make_examples`                    | 1h 57m 22s       |               |               |               |
-`call_variants`                    | 6h 23m 40s       |               |               |               |
-`postprocess_variants` (no gVCF)   |     4m 15s       |               |               |               |
-`postprocess_variants` (with gVCF) |     4m 27s       |               |               |               |
-total time (single machine)        | 9h 24m           |               |               |               |
+The following table shows the execution time of the step
+in different numbers of GPUs.
+
+Step            | Pure CPU cluster | 1-GPU Cluster | 2-GPU Cluster | 4-GPU Cluster |
+--------------- | ---------------- | ------------- | ------------- | ------------- |
+`call_variants` | 6h 23m 40s       |               |               |               |
+
+*Machine Spec. : 16-vCores with 104 GB memory (n1-highmem-16) * 4

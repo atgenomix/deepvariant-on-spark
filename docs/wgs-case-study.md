@@ -32,7 +32,55 @@ After the cluster has been launched, please follow [the quick-start guide
 for DataProc](/docs/deepvariant-on-spark-quick-start-dataproc.md#initialize-deepvariant-on-spark-dos)
 to install DeeopVariant-on-Spark.
 
-## Run a WGS sample
+## Run a WGS sample from Google Storage Bucket
+
+One simple command to run the whole pipeline.
+
+```
+bash ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH output
+```
+
+##### Note
+SeqPiper CAN NOT process the BAM file (gs://deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam)
+ provided from DeepVariant team since the file is generated from old HTSLib
+ and caused the parsing error by Apache ADAM. Therefore, we use Samtools
+ to regenerate the new BAM by the following command and put into our
+ Google Storage Bucket (gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam).
+
+```
+samtools view -h old.bam | samtools viewe -Sb - > new.bam
+```
+
+### Usage
+
+```
+Usage:
+	 ./deepvariant-on-spark/scripts/run.sh <Input BAM> <Reference Version> <Contig Style> <Output Folder> [GVCF]
+Parameters:
+	 <Input BAM>: the input bam file from Google Strorage or HDFS
+	 <Reference Version>: [ 19 | 38 ]
+	 <Contig Style>: [ HG | GRCH ]
+	 <Output Folder>: the output folder on HDFS
+	 GVCF: the gvcf will be generated if enabled
+Examples:
+	 ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH /output_HG002
+	 ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH /output_HG002 GVCF
+```
+
+### Result
+
+Then, all of outputs and their size are listed as follows:
+
+```
+user@my-dos-m:~$ hadoop fs -du -h /output
+101.1 G  /output/alignment.bam
+155.6 G  /output/alignment.parquet
+42.6 G   /output/examples
+246.0 M  /output/variants
+101.1 M  /output/vcf
+```
+
+### Run a WGS sample from Local Disk
 
 ### Preliminaries
 
@@ -73,7 +121,7 @@ It took us about 15min to copy the files.
 ### Submit a Spark job to execute DeepVariant in parallel
 
 ```
-
+bash ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH output
 ```
 
 
@@ -92,8 +140,8 @@ Step                               | 2-Workers cluster | 4-Workers Cluster | 8-W
 `make_examples`                    |                   | 1h 57m 22s        |                   |                    |
 `call_variants`                    |                   | 6h 23m 40s        |                   |                    |
 `postprocess_variants` (no gVCF)   |                   |     4m 15s        |                   |                    |
-`postprocess_variants` (with gVCF) | 55m 47s           |     4m 27s        |                   |                    |
-Total time                         | 5h 33m - 6h 07m   |                   |                   |                    |
+`postprocess_variants` (with gVCF) |                   |     4m 27s        |                   |                    |
+Total time                         |                   | 9h 24m            |                   |                    |
 
 ## Delete Cluster
 

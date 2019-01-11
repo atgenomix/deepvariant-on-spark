@@ -58,7 +58,7 @@ T0=$(date +%s)
 ${spark} \
   --master yarn \
   --deploy-mode cluster \
-  --name call_variants \
+  --name CALL_VARIANTS \
   --class net.vartotal.piper.cli.PiperMain \
   --num-executors $(( ($num_vcores / $executor_vcores) - 1 )) \
   --driver-memory 1g \

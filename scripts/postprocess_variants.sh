@@ -55,7 +55,7 @@ fi
 extra_params=""
 
 if [[ $# -eq 7 ]]; then
-  extra_params="\" --gvcf_outfile ${gvcf_out} \" "
+  extra_params="\\\" --gvcf_outfile ${gvcf_out} \\\" "
 fi
 
 T0=$(date +%s)
@@ -103,7 +103,7 @@ ${spark} \
 if [[ $? != 0 ]]; then
   echo "########################################################################################"
   echo
-  echo "[ERROR] call_variants failed: Please go to Hadoop Cluster Portal for more detail"
+  echo "[ERROR] postprocess_variants failed: Please go to Hadoop Cluster Portal for more detail"
   echo
   echo "########################################################################################"
   exit -1
@@ -111,7 +111,7 @@ else
   str_time=$( print_time ${T0} )
   echo "########################################################################################"
   echo
-  echo "[INFO] call_variants completed: " ${str_time}
+  echo "[INFO] postprocess_variants completed: " ${str_time}
   echo
   echo "########################################################################################"
 fi

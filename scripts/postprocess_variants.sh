@@ -22,7 +22,7 @@ num_nodes=`curl http://localhost:8088/ws/v1/cluster/metrics | \
 #########################################################################################
 usage() {
   echo "Usage:"
-  echo $'\t' "$0 <Example folder> <BED folder> <Reference Version> <Contig Style> <Variant Folder> <Output Folder> "
+  echo $'\t' "$0 <Example folder> <BED folder> <Reference Version> <Contig Style> <Variant Folder> <Output Folder> <GVCF Output Folder>"
   echo "Parameters:"
   echo $'\t' "<Example folder>: the output folder of make_examples"
   echo $'\t' "<BED folder>: the bed file for Adaptive Data Parallelization (ADP)"
@@ -30,7 +30,7 @@ usage() {
   echo $'\t' "<Contig Style>: [ HG | GRCH ]"
   echo $'\t' "<Variant folder>: the output folder of call_variants"
   echo $'\t' "<Output Folder>: the output folder on HDFS"
-  echo $'\t' "GVCF: the gvcf will be generated if enabled"
+  echo $'\t' "<GVCF Output FOlder>: the gvcf output folder on HDFS"
   echo "Examples: "
   echo $'\t' "$0 /output_HG002/examples /bed/19/contiguous_unmasked_regions_156_parts 19 GRCH /output_HG002/variants /output_HG002/vcf"
   echo $'\t' "$0 /output_HG002/examples /bed/19/contiguous_unmasked_regions_156_parts 19 GRCH /output_HG002/variants /output_HG002/vcf /output_HG002/gvcf"
@@ -55,7 +55,7 @@ fi
 extra_params=""
 
 if [[ $# -eq 7 ]]; then
-  extra_params=" --gvcf_outfile ${gvcf_out}"
+  extra_params="\" --gvcf_outfile ${gvcf_out} \" "
 fi
 
 T0=$(date +%s)
@@ -94,7 +94,7 @@ ${spark} \
       --reference-version ${ref_version} \
       --workflow-type 1 \
       --is-pcr-free 0 \
-      --extra-params \'${extra_params}\' \
+      --extra-params ${extra_params} \
       --reference-system ${contig_style} \
       --platform-type illumina \
       --java-mem-in-mb 5120

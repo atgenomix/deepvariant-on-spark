@@ -71,7 +71,7 @@ fi
 
 gvcf_out=""
 if [[ $# -eq 5 ]]; then
-  gvcf_out=hdfs:///$output_folder/gvcf
+  gvcf_out='hdfs:///$output_folder/gvcf'
 fi
 
 # main

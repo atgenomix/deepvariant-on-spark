@@ -1,7 +1,7 @@
 # DeepVariant-on-spark
 
-DeepVariant-on-Spark is an analysis pipeline that ports DeepVariant on
-Apache Spark for pipeline acceleration.
+DeepVariant-on-Spark is a germline short variant calling pipeline that runs DeepVariant on
+Apache Spark.
 
 ## Why DeepVariant-on-Spark
 

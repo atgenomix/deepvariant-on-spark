@@ -94,7 +94,7 @@ ${spark} \
       --reference-version ${ref_version} \
       --workflow-type 1 \
       --is-pcr-free 0 \
-      --extra-params ${extra_params} \
+      --extra-params \'${extra_params}\' \
       --reference-system ${contig_style} \
       --platform-type illumina \
       --java-mem-in-mb 5120

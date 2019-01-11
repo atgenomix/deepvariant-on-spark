@@ -8,6 +8,7 @@ ref_version=$3
 contig_style=$4
 call_variants_out=$5
 postprocess_variants_out=$6
+gvcf_out=$7
 # variables
 #########################################################################################
 spark=/usr/bin/spark-submit
@@ -29,8 +30,10 @@ usage() {
   echo $'\t' "<Contig Style>: [ HG | GRCH ]"
   echo $'\t' "<Variant folder>: the output folder of call_variants"
   echo $'\t' "<Output Folder>: the output folder on HDFS"
+  echo $'\t' "GVCF: the gvcf will be generated if enabled"
   echo "Examples: "
-  echo $'\t' "$0 output_HG002/examples /bed/19/contiguous_unmasked_regions_156_parts 19 GRCH output_HG002/variants output_HG002/vcf"
+  echo $'\t' "$0 /output_HG002/examples /bed/19/contiguous_unmasked_regions_156_parts 19 GRCH /output_HG002/variants /output_HG002/vcf"
+  echo $'\t' "$0 /output_HG002/examples /bed/19/contiguous_unmasked_regions_156_parts 19 GRCH /output_HG002/variants /output_HG002/vcf /output_HG002/gvcf"
   return
 }
 
@@ -43,10 +46,16 @@ print_time () {
 
 # argument check
 #########################################################################################
-if [[ $# -ne 6 ]]; then
-  echo "[ERROR] Illegal number of parameters (Expected: 6, Actual: $#)"
+if [[ $# -ne 6 && $# -ne 7 ]]; then
+  echo "[ERROR] Illegal number of parameters (Expected: 6 or 7, Actual: $#)"
   usage $0
   exit -1
+fi
+
+extra_params=""
+
+if [[ $# -eq 7 ]]; then
+  extra_params=" --gvcf_outfile ${gvcf_out}"
 fi
 
 T0=$(date +%s)
@@ -85,7 +94,7 @@ ${spark} \
       --reference-version ${ref_version} \
       --workflow-type 1 \
       --is-pcr-free 0 \
-      --extra-params '' \
+      --extra-params ${extra_params} \
       --reference-system ${contig_style} \
       --platform-type illumina \
       --java-mem-in-mb 5120

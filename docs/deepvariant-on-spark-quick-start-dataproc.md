@@ -32,11 +32,13 @@ gcloud beta dataproc clusters delete my-dos
 ## Initialize DeepVariant-on-Spark (DOS)
 
 DeepVariant-on-Spark leverage Ansible to deploy SeqPiper and related
-packages to DataProc Cluster. When the cluster has been launched
+packages to DataProc Cluster. For password-less deployment, your SSH key
+should be added by using `ssh-add`. When the cluster has been launched
 completely, you can login the terminal of the master via Google Cloud
 Platform or the following command:
 
 ```
+ssh-add -K <your SSH Key>
 gcloud compute ssh --ssh-flag="-A" my-dos-m --zone="us-west1-b"
 ```
 
@@ -67,10 +69,8 @@ my-dos-w-0                 : ok=26   changed=22   unreachable=0    failed=0
 my-dos-w-1                 : ok=26   changed=22   unreachable=0    failed=0
 ```
 
-
 **Congradulates! Let's start to run
 [the first WGS sample](docs/wgs-case-study.md).**
-
 
 NOTE: If any failure is occurred, please refer to the following session
 to find the root cause. If not fixed, please submit an issue to [our

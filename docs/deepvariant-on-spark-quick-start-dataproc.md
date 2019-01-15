@@ -12,6 +12,9 @@ and Hadoop service offered on Google Cloud Platform.
 To access DataProc, plese install `gsutil` first. You can go to
 [Google Cloud](https://cloud.google.com/storage/docs/gsutil_install) for
 installation guide.
+For password-less deployment, your SSH key is required. Please refer to
+[this link](https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys)
+for acquiring your SSH Key.
 
 ## Launch Cluster
 
@@ -33,12 +36,13 @@ gcloud beta dataproc clusters delete my-dos
 
 DeepVariant-on-Spark leverage Ansible to deploy SeqPiper and related
 packages to DataProc Cluster. For password-less deployment, your SSH key
-should be added by using `ssh-add`. When the cluster has been launched
-completely, you can login the terminal of the master via Google Cloud
-Platform or the following command:
+(i.e. ~/.ssh/google_compute_engine) should be added by using `ssh-add`
+first. When the cluster has been launched completely, you can login the
+terminal of the master via Google Cloud Platform or the following
+command:
 
 ```
-ssh-add -K <your SSH Key>
+ssh-add -K ~/.ssh/google_compute_engine
 gcloud compute ssh --ssh-flag="-A" my-dos-m --zone="us-west1-b"
 ```
 

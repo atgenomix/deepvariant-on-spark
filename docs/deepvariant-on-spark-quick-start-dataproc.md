@@ -75,6 +75,9 @@ my-dos-w-1                 : ok=26   changed=22   unreachable=0    failed=0
 
 ## A Quick Test Case
 
+To evaluate the deployment, the following command is able to run the
+whole pipeline by using a small sample.
+
 ```
 bash ./deepvariant-on-spark/scripts/run.sh gs://deepvariant/case-study-testdata/NA12878_sliced.bam 19 GRCH output
 ```

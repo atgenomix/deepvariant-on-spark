@@ -5,16 +5,6 @@
   tasks:
   - block:
 
-    # GCS connector installation
-    ####################################################################################
-    - shell: ls /usr/lib/hadoop/lib/gcs-connector-*
-      register: gcs
-    - name: make install gcs connector
-      file:
-        src: "{{ gcs.stdout }}"
-        dest: /home/liyunlung/gcs-connector-hadoop2-latest.jar
-        state: link
-
     # hadoop installation
     ####################################################################################
     - name: create hadoop directory

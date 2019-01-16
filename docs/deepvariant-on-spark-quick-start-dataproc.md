@@ -73,6 +73,41 @@ my-dos-w-0                 : ok=26   changed=22   unreachable=0    failed=0
 my-dos-w-1                 : ok=26   changed=22   unreachable=0    failed=0
 ```
 
+**A Quick Test Case
+
+```
+bash ./deepvariant-on-spark/scripts/run.sh gs://deepvariant/case-study-testdata/NA12878_sliced.bam 19 GRCH output
+```
+
+Then, you will have the following log if successful.
+```
+... (skipped) ...
+
+19/01/16 07:50:12 INFO com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystemBase: GHFS version: 1.6.10-hadoop2
+19/01/16 07:50:13 INFO org.apache.hadoop.yarn.client.RMProxy: Connecting to ResourceManager at my-dos-m/10.138.1.13:8032
+19/01/16 07:50:15 INFO org.apache.hadoop.yarn.client.api.impl.YarnClientImpl: Submitted application application_1547623859548_0009
+########################################################################################
+
+[INFO] postprocess_variants completed:  00:01:12
+
+########################################################################################
+transform_data 	 00:00:54
+select_bam 	 00:00:46
+make_examples 	 00:04:41
+call_variants 	 00:01:35
+postprocess_variants 	 00:01:12
+```
+
+Also, you can check the output files.
+```
+user@my-dos-m:~$ hadoop fs -du -h /output
+5.6 M   /output/alignment.bam
+36.3 M  /output/alignment.parquet
+1.9 M   /output/examples
+13.3 K  /output/variants
+6.8 K   /output/vcf
+```
+
 **Congradulates! Let's start to run
 [the first WGS sample](docs/wgs-case-study.md).**
 

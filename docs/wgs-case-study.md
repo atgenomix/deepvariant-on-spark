@@ -13,6 +13,13 @@ not be the fastest or cheapest configuration for your needs.
 
 ## Launch CPU Cluster
 
+Before launching a Dataproc with GPU hardware, you should check whether
+you have enough quota for your use case. As your use of Google Cloud
+Platform expands over time, your quotas may increase accordingly. If you
+expect a notable upcoming increase in usage, you can proactively
+[request quota](https://cloud.google.com/compute/quotas#request_quotas)
+adjustments from the Quotas page in the GCP Console.
+
 In this example, there are 4 worker nodes launched and each node has 16
 vcores with 104 GB memory.
 

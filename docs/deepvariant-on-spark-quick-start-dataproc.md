@@ -21,6 +21,7 @@ for acquiring your SSH Key.
 ```
 gcloud beta dataproc clusters create my-dos \
  --subnet default --zone us-west1-b \
+ --num-workers 2 --worker-machine-type n1-highmem-16 \
  --image-version 1.2.59-deb9 \
  --initialization-actions gs://seqslab-deepvariant/scripts/initialization-on-dataproc.sh \
  --initialization-action-timeout 20m
@@ -64,6 +65,7 @@ Then, DeepVariant-on-Spark will be installed automatically by Ansible. It
 will take 10 or more minutes to deploy all of necessary packages to the
 entire cluster. If successful, all of deployment has no failure and you
 will see the log like:
+
 ```
 ... (skipped) ...
 
@@ -83,29 +85,34 @@ bash ./deepvariant-on-spark/scripts/run.sh gs://deepvariant/case-study-testdata/
 ```
 
 Then, you will have the following log if successful.
+
 ```
+19/01/17 07:01:20 INFO com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystemBase: GHFS version: 1.6.10-hadoop2
+19/01/17 07:01:21 INFO org.apache.hadoop.yarn.client.RMProxy: Connecting to ResourceManager at my-dos-m/10.138.1.18:8032
+
 ... (skipped) ...
 
-19/01/16 07:50:12 INFO com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystemBase: GHFS version: 1.6.10-hadoop2
-19/01/16 07:50:13 INFO org.apache.hadoop.yarn.client.RMProxy: Connecting to ResourceManager at my-dos-m/10.138.1.13:8032
-19/01/16 07:50:15 INFO org.apache.hadoop.yarn.client.api.impl.YarnClientImpl: Submitted application application_1547623859548_0009
+19/01/17 07:10:32 INFO com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystemBase: GHFS version: 1.6.10-hadoop2
+19/01/17 07:10:33 INFO org.apache.hadoop.yarn.client.RMProxy: Connecting to ResourceManager at my-dos-m/10.138.1.18:8032
+19/01/17 07:10:35 INFO org.apache.hadoop.yarn.client.api.impl.YarnClientImpl: Submitted application application_1547707864423_0009
 ########################################################################################
 
-[INFO] postprocess_variants completed:  00:01:12
+[INFO] postprocess_variants completed:  00:02:05
 
 ########################################################################################
-transform_data 	 00:00:54
-select_bam 	 00:00:46
-make_examples 	 00:04:41
-call_variants 	 00:01:35
-postprocess_variants 	 00:01:12
+transform_data 	 00:01:01
+select_bam 	 00:01:00
+make_examples 	 00:05:13
+call_variants 	 00:01:59
+postprocess_variants 	 00:02:05
 ```
 
 Also, you can check the output files.
+
 ```
 user@my-dos-m:~$ hadoop fs -du -h /output
 5.6 M   /output/alignment.bam
-36.3 M  /output/alignment.parquet
+36.2 M  /output/alignment.parquet
 1.9 M   /output/examples
 13.3 K  /output/variants
 6.8 K   /output/vcf
@@ -117,6 +124,40 @@ user@my-dos-m:~$ hadoop fs -du -h /output
 NOTE: If any failure is occurred, please refer to the following session
 to find the root cause. If not fixed, please submit an issue to [our
 github repo](https://github.com/atgenomix/deepvariant-on-spark/issues/new)
+
+## Check Error Message
+
+You can directly check error messages from [Google DataProc Portal](https://console.cloud.google.com/dataproc/clusters)
+to figure out which step was failed. Or DataProc keeps all of messages
+in `/var/log/dataproc-initialization-script-0.log` of each instance. The
+below messages are examples if successfully launching your DataProc
+cluster:
+
+```
+user@my-dos-m:~$ tail -f /var/log/dataproc-initialization-script-0.log
+Setting up python-dev (2.7.13-2) ...
+Setting up libpython-all-dev:amd64 (2.7.13-2) ...
+Setting up python-all-dev (2.7.13-2) ...
++ pip install jinja2
+Requirement already satisfied: jinja2 in /usr/lib/python2.7/dist-packages
+Requirement already satisfied: MarkupSafe in /usr/lib/python2.7/dist-packages (from jinja2)
++ systemctl restart hadoop-yarn-resourcemanager
++ echo '[info] setup_drivers.sh done'
+[info] setup_drivers.sh done
+[info] initialization_actions.sh done
+
+user@my-dos-w-0:~$ tail -f /var/log/dataproc-initialization-script-0.log
+Copying gs://deepvariant/models/DeepVariant/0.7.0/DeepVariant-inception_v3-0.7.0+data-wes_standard/model.ckpt.data-00000-of-00001...
+Copying gs://deepvariant/models/DeepVariant/0.7.0/DeepVariant-inception_v3-0.7.0+data-wes_standard/model.ckpt.index...
+Copying gs://deepvariant/models/DeepVariant/0.7.0/DeepVariant-inception_v3-0.7.0+data-wes_standard/model.ckpt.meta...
+\ [3 files][362.2 MiB/362.2 MiB]
+Operation completed over 3 objects/362.2 MiB.
++ lspci
++ grep -q NVIDIA
++ echo '[info] setup_drivers.sh done'
+[info] setup_drivers.sh done
+[info] initialization_actions.sh done
+```
 
 ## Check Environment
 
@@ -216,6 +257,13 @@ user@my-dos-w-0:~$ ls -al ${OUTPUT_DIR}
 ```
 
 ## Launch GPU Environment
+
+Before launching a Dataproc with GPU hardware, you should check whether
+you have enough quota for your use case. As your use of Google Cloud
+Platform expands over time, your quotas may increase accordingly. If you
+expect a notable upcoming increase in usage, you can proactively
+[request quota](https://cloud.google.com/compute/quotas#request_quotas)
+adjustments from the Quotas page in the GCP Console.
 
 If you would like to test GPU environment, you can launch a GPU cluster
 by the following command:

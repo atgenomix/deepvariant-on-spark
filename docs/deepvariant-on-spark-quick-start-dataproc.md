@@ -47,6 +47,14 @@ ssh-add -K ~/.ssh/google_compute_engine
 gcloud compute ssh --ssh-flag="-A" my-dos-m --zone="us-west1-b"
 ```
 
+*Note*: if `ssh-add` is failed and the error message is like "Error
+connecting to agent: No such file or directory", please use the
+following command first.
+
+```
+ssh-agent bash
+```
+
 ### Deploy SeqPiper and related packages
 
 DeepVariant-on-Spark leverages `SeqPiper`, a wrapper of Spark `Pipe()`,

@@ -35,6 +35,8 @@ Apache Spark.
 *   [DeepVariant-on-Spark quick start on Google Cloud vid DataProc](docs/deepvariant-on-spark-quick-start-dataproc.md)
 *   [DeepVariant-on-Spark WGS case study](docs/wgs-case-study.md)
 *   [Multiple GPU acceleration](docs/multiple-gpu-accerlations.md)
+*   [Customization](docs/customization.md)
+*   [Trobuleshooting](docs/trobuleshooting.md)
 
 ## Contributing
 

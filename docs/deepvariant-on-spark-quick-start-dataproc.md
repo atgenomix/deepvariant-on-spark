@@ -83,7 +83,7 @@ my-dos-w-0                 : ok=26   changed=22   unreachable=0    failed=0
 my-dos-w-1                 : ok=26   changed=22   unreachable=0    failed=0
 ```
 
-Please refer to [Cluster Operation Portal](docs/trobuleshooting.md#how-to-monitor-the-progress-of-the-pipeline-)
+Please refer to [Cluster Operation Portal](trobuleshooting.md#how-to-monitor-the-progress-of-the-pipeline-)
 to monitor the healthy status of YARN and HDFS.
 
 ## A Quick Test Case
@@ -130,10 +130,10 @@ user@my-dos-m:~$ hadoop fs -du -h /output
 ```
 
 **Congradulates! Let's start to run
-[the first WGS sample](docs/wgs-case-study.md).**
+[the first WGS sample](wgs-case-study.md).**
 
 NOTE: If any failure is occurred, please refer to [the trobuleshooting
-session](docs/trobuleshooting.md) to find the root cause. If not fixed,
+session](trobuleshooting.md) to find the root cause. If not fixed,
 please submit an issue to [our github repo](https://github.com/atgenomix/deepvariant-on-spark/issues/new)
 
 ## A simple test case

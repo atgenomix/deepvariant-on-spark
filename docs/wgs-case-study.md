@@ -36,7 +36,7 @@ gcloud beta dataproc clusters create my-dos \
 ```
 
 After the cluster has been launched, please follow [the quick-start guide
-for DataProc](/docs/deepvariant-on-spark-quick-start-dataproc.md#initialize-deepvariant-on-spark-dos)
+for DataProc](deepvariant-on-spark-quick-start-dataproc.md#initialize-deepvariant-on-spark-dos)
 to install DeeopVariant-on-Spark.
 
 ## Run a WGS sample from Google Storage Bucket
@@ -75,7 +75,7 @@ Examples:
 ```
 
 *Note*: If you would like to stop the pipeline for any reason, please
-refer to [How to stop the pipeline?](docs/trobuleshooting.md#how-to-monitor-the-progress-of-the-pipeline-)
+refer to [How to stop the pipeline?](trobuleshooting.md#how-to-monitor-the-progress-of-the-pipeline-)
 for more details.
 
 ### Result
@@ -128,4 +128,4 @@ Speed-up               | 1.00X             | 1.91X             | 3.31X          
 DeepVariant-on-Spark is `155`, so we won't gain significant improvement
 when adding workers from 8 to 16 (from 128 to 256 vcores). If you prefer
 to add more resources for fast turnaround time, please refer to [the
-customerization page](docs/customization.md) for more details.
+customerization page](customization.md) for more details.

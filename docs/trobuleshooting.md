@@ -105,5 +105,15 @@ yarn application -kill <application ID>
 
 ## How to monitor the progress of the pipeline ?
 
-<TBD>
+Google Cloud Dataproc Cluster provides two portal for operation and
+monitoring. One is for YARN resource manager and another is HDFS name
+node. In addition, you can [Google Compute Engine Portal](https://console.cloud.google.com/compute/instances)
+to monitor the resource usage and investigate the error log.
 
+Web UI               | Port | URL                          |
+---------------------| ---- | ---------------------------- |
+YARN ResourceManager | 8088 | http://master-host-name:8088 |
+HDFS NameNode        | 9870 | http://master-host-name:9870 |
+
+Please refer to [Cluster web interface](https://cloud.google.com/dataproc/docs/concepts/accessing/cluster-web-interfaces)
+for more details.

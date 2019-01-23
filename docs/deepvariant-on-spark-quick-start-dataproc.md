@@ -83,6 +83,9 @@ my-dos-w-0                 : ok=26   changed=22   unreachable=0    failed=0
 my-dos-w-1                 : ok=26   changed=22   unreachable=0    failed=0
 ```
 
+Please refer to [Cluster Operation Portal](docs/trobuleshooting.md#how-to-monitor-the-progress-of-the-pipeline-)
+to monitor the healthy status of YARN and HDFS.
+
 ## A Quick Test Case
 
 To evaluate the deployment, the following command is able to run the

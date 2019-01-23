@@ -74,6 +74,10 @@ Examples:
 	 ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH /output_HG002 GVCF
 ```
 
+*Note*: If you would like to stop the pipeline for any reason, please
+refer to [How to stop the pipeline?](docs/trobuleshooting.md#how-to-monitor-the-progress-of-the-pipeline-)
+for more details.
+
 ### Result
 
 Then, all of outputs and their size are listed as follows:

@@ -100,7 +100,11 @@ else
   git clone https://github.com/atgenomix/deepvariant.git
   cd ${DEEPVARIANT}
 
-  HOME="${HOME}" DV_GPU_BUILD=1 DV_INSTALL_GPU_DRIVERS=1 bash ./build-prereq.sh
+  if (lspci | grep -q NVIDIA); then
+    HOME="${HOME}" DV_GPU_BUILD=1 DV_INSTALL_GPU_DRIVERS=1 bash ./build-prereq.sh
+  else
+    HOME="${HOME}" bash ./build-prereq.sh
+  fi
   HOME="${HOME}" PATH="${PATH}:${HOME}/bin" bash ./build_release_binaries.sh
   BUCKET="gs://${DEEPVARIANT}"
   BIN_VERSION="0.7.0"

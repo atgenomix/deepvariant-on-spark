@@ -28,6 +28,7 @@ gcloud beta dataproc clusters create my-dos \
   --subnet default --zone us-west1-b \
   --master-machine-type n1-highmem-8 --master-boot-disk-size 256 \
   --num-workers 5 --worker-machine-type n1-highmem-16 \
+  --min-cpu-platform "Intel Skylake" \
   --worker-boot-disk-size 384 \
   --num-worker-local-ssds 1 --image-version 1.2.59-deb9  \
   --initialization-actions gs://seqslab-deepvariant/scripts/initialization-on-dataproc.sh  \

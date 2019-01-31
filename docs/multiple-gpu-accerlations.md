@@ -17,6 +17,7 @@ gcloud beta dataproc clusters create my-dos1 \
   --subnet default --zone us-west1-b \
   --master-machine-type n1-highmem-8 --master-boot-disk-size 256 \
   --num-workers 4 --worker-machine-type n1-highmem-16 \
+  --worker-min-cpu-platform "Intel Skylake" \
   --worker-boot-disk-size 384 \
   --worker-accelerator type=nvidia-tesla-p100,count=1 \
   --num-worker-local-ssds 1 --image-version 1.2.59-deb9  \
@@ -76,7 +77,7 @@ in different numbers of GPUs.
 
 Hardware Spec.  | Pure CPU cluster | 1-GPU Cluster | 2-GPU Cluster | 4-GPU Cluster |
 --------------- | ---------------- | ------------- | ------------- | ------------- |
-Execution Time  | 6h 23m 40s       |    16m 46s    |    9m 34s     |    7m 19s     |
+Execution Time  | 1h 20m 49s       |    16m 46s    |    9m 34s     |    7m 19s     |
 
 * The number of GPU cards is adjustable by changing `N` of
 `--worker-accelerator type=nvidia-tesla-p100,count=N` when cluster

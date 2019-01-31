@@ -87,8 +87,8 @@ Then, all of outputs and their size are listed as follows:
 user@my-dos-m:~$ hadoop fs -du -h /output
 101.1 G  /output/alignment.bam
 155.6 G  /output/alignment.parquet
-42.6 G   /output/examples
-246.0 M  /output/variants
+42.7 G   /output/examples
+246.1 M  /output/variants
 101.1 M  /output/vcf
 ```
 
@@ -98,35 +98,35 @@ The execution time of each step is listed as follows:
 
 Step | Module                 | Execution Time |
 -----| ---------------------- | -------------- |
-1    | `transform_data`       |     37m 35s    |
-2    | `select_bam`           |     17m 21s    |
-3    | `make_examples`        |  1h 41m 46s    |
-4    | `call_variants`        |  5h 08m 04s    |
-5    | `postprocess_variants` |      4m 17s    |
-Sum  | Total time             |  7h 49m        |
+1    | `transform_data`       |     31m 17s    |
+2    | `select_bam`           |     14m 56s    |
+3    | `make_examples`        |  1h 22m 09s    |
+4    | `call_variants`        |  1h 03m 26s    |
+5    | `postprocess_variants` |      3m 31s    |
+Sum  | Total time             |  3h 15m        |
 
 ## Scalability
 
 DeepVariant-on-Spark leverage Apache Spark to support distributed
 computation, so it can be easily scaled out. Here, we try to run the
-whole pipeline in clusters with different numbers of nodes (2^N; N=1~4)
+whole pipeline in clusters with different numbers of nodes (2^N; N=1~3)
 and observe the performance improvement.
 
-Step                   | 2-Workers cluster | 4-Workers Cluster | 8-Workers Cluster | 16-Workers Cluster |
----------------------- | ----------------- | ----------------- | ----------------- | ------------------ |
-`transform_data`       |  1h 09m 25s       |    43m 02s        |    23m 12s        |    17m 22s         |
-`select_bam`           |     35m 13s       |    20m 23s        |    11m 53s        |    10m 54s         |
-`make_examples`        |  3h 44m 13s       | 1h 51m 09s        | 1h 04m 05s        |    47m 47s         |
-`call_variants`        | 12h 00m 20s       | 6h 14m 09s        | 3h 37m 06s        | 2h 59m 41s         |
-`postprocess_variants` |      7m 36s       |     4m 16s        |     2m 49s        |     2m 05s         |
-Total time             | 17h 37m           | 9h 13m            | 5h 19m            | 4h 18m             |
-Speed-up               | 1.00X             | 1.91X             | 3.31X             | 4.10X              |
+Step                   | 2-Workers cluster | 4-Workers Cluster | 8-Workers Cluster |
+---------------------- | ----------------- | ----------------- | ----------------- |
+`transform_data`       |  1h 09m 07s       |    39m 44s        |    21m 14s        |
+`select_bam`           |     34m 30s       |    18m 04s        |    11m 33s        |
+`make_examples`        |  3h 31m 29s       | 1h 47m 39s        | 1h 00m 16s        |
+`call_variants`        |  2h 35m 20s       | 1h 20m 49s        |    51m 00s        |
+`postprocess_variants` |      7m 07s       |     4m 06s        |     2m 42s        |
+Total time             |  7h 58m           | 4h 10m            | 2h 27m            |
+Speed-up               | 1.00X             | 1.91X             | 3.25X             |
 
 *change the number of workers by `--num-workers N` in the command for
  cluster launch.
 
 *NOTE*: The default number of data sharding for WGS in
 DeepVariant-on-Spark is `155`, so we won't gain significant improvement
-when adding workers from 8 to 16 (from 128 to 256 vcores). If you prefer
+when adding workers from 4 to 8 (from 64 to 128 vcores). If you prefer
 to add more resources for fast turnaround time, please refer to [the
 customerization page](customization.md) for more details.

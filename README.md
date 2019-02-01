@@ -68,4 +68,4 @@ work.
 ## Disclaimer
 
 *   This is not an official Atgenomix product.
-*   To utilize the official product with full experience, please contact ATgenomix (info@atgenomix.com).
+*   To utilize the official product with full experience, please contact Atgenomix (info@atgenomix.com).

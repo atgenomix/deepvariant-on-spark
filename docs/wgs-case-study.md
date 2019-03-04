@@ -45,18 +45,7 @@ to install DeeopVariant-on-Spark.
 One simple command to run the whole pipeline.
 
 ```
-bash ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH output
-```
-
-##### Note
-SeqPiper CAN NOT process the BAM file (gs://deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam)
- provided from DeepVariant team since the file is generated from old HTSLib
- and caused the parsing error by Apache ADAM. Therefore, we use Samtools
- to regenerate the new BAM by the following command and put into our
- Google Storage Bucket (gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam).
-
-```
-samtools view -h old.bam | samtools viewe -Sb - > new.bam
+bash ./deepvariant-on-spark/scripts/run.sh gs://deepvariant/case-study-testdata/HG002_NIST_150bp_50x.bam 19 GRCH output
 ```
 
 ### Usage
@@ -71,8 +60,8 @@ Parameters:
 	 <Output Folder>: the output folder on HDFS
 	 GVCF: the gvcf will be generated if enabled
 Examples:
-	 ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH /output_HG002
-	 ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH /output_HG002 GVCF
+	 ./deepvariant-on-spark/scripts/run.sh gs://deepvariant/case-study-testdata/HG002_NIST_150bp_50x.bam 19 GRCH /output_HG002
+	 ./deepvariant-on-spark/scripts/run.sh gs://deepvariant/case-study-testdata/HG002_NIST_150bp_50x.bam 19 GRCH /output_HG002 GVCF
 ```
 
 *Note*: If you would like to stop the pipeline for any reason, please

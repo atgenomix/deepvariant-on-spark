@@ -1,7 +1,7 @@
 # DeepVariant-on-spark
 
 DeepVariant-on-Spark is a germline short variant calling pipeline that runs Google DeepVariant on
-Apache Spark.
+Apache Spark at scale.
 
 ## Why DeepVariant-on-Spark
 

@@ -35,9 +35,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get install -y "linux-headers-$(uname -r)"
 # Without --no-install-recommends this takes a very long time.
 apt-get install -y -t stretch-backports --no-install-recommends \
-  nvidia-cuda-toolkit nvidia-kernel-common
-apt-get upgrade -y
-apt-get install -y nvidia-driver nvidia-smi
+  nvidia-cuda-toolkit nvidia-kernel-common nvidia-driver nvidia-smi
 
 # Create a system wide NVBLAS config
 # See http://docs.nvidia.com/cuda/nvblas/

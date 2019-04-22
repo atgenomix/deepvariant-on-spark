@@ -32,7 +32,7 @@ done
 # See https://wiki.debian.org/NvidiaGraphicsDrivers
 export DEBIAN_FRONTEND=noninteractive
 #apt-get install -y "linux-headers-$(uname -r)"
-apt-get install linux-headers-$(uname -r|sed 's/[^-]*-[^-]*-//')
+apt-get install -y linux-headers-$(uname -r|sed 's/[^-]*-[^-]*-//')
 apt update
 # Without --no-install-recommends this takes a very long time.
 apt install -y -t stretch-backports --no-install-recommends nvidia-cuda-toolkit nvidia-kernel-common

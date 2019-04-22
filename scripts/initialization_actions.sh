@@ -20,28 +20,22 @@ apt-get install -y pciutils
 # Add non-free Debian 9 Stretch packages.
 # See https://www.debian.org/distrib/packages#note
 for type in deb deb-src; do
-  for distro in stretch stretch-backports; do
+  for distro in stretch; do
     for component in contrib non-free; do
       echo "${type} http://deb.debian.org/debian/ ${distro} ${component}" \
           >> /etc/apt/sources.list.d/non-free.list
     done
   done
 done
+apt update
 
 # Install proprietary NVIDIA Drivers and CUDA
 # See https://wiki.debian.org/NvidiaGraphicsDrivers
 export DEBIAN_FRONTEND=noninteractive
-#apt-get install -y "linux-headers-$(uname -r)"
 apt-get install -y linux-headers-$(uname -r|sed 's/[^-]*-[^-]*-//')
-apt update
 # Without --no-install-recommends this takes a very long time.
-#apt install -y -t stretch-backports --no-install-recommends nvidia-cuda-toolkit nvidia-kernel-common
-apt install -y -t stretch --no-install-recommends nvidia-cuda-toolkit nvidia-kernel-common
-apt install -y -t stretch --no-install-recommends nvidia-driver nvidia-smi
-
-apt-get update
-# apt-get update && apt-get upgrade -y
-apt install -y nvidia-driver nvidia-smi
+apt install -y -t stretch --no-install-recommends \
+  nvidia-cuda-toolkit nvidia-kernel-common nvidia-driver nvidia-smi
 
 # Create a system wide NVBLAS config
 # See http://docs.nvidia.com/cuda/nvblas/

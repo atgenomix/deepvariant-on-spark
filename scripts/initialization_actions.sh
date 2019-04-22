@@ -27,7 +27,7 @@ for type in deb deb-src; do
     done
   done
 done
-apt-get update
+apt-get update && apt-get upgrade
 
 # Install proprietary NVIDIA Drivers and CUDA
 # See https://wiki.debian.org/NvidiaGraphicsDrivers

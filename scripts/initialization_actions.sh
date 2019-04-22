@@ -31,14 +31,13 @@ done
 # Install proprietary NVIDIA Drivers and CUDA
 # See https://wiki.debian.org/NvidiaGraphicsDrivers
 export DEBIAN_FRONTEND=noninteractive
-apt-get install -y "linux-headers-$(uname -r)"
+#apt-get install -y "linux-headers-$(uname -r)"
+apt-get install linux-headers-$(uname -r|sed 's/[^-]*-[^-]*-//')
+apt update
 # Without --no-install-recommends this takes a very long time.
-apt-get install -y -t stretch-backports --no-install-recommends \
-  nvidia-cuda-toolkit nvidia-kernel-common
-##nvidia-driver nvidia-smi
+apt install -y -t stretch-backports --no-install-recommends nvidia-cuda-toolkit nvidia-kernel-common
+apt install -y -t stretch-backports --no-install-recommends nvidia-driver nvidia-smi
 
-# See https://wiki.debian.org/NvidiaGraphicsDrivers#stretch
-echo "deb http://httpredir.debian.org/debian stretch-backports main contrib non-free" >> /etc/apt/sources.list
 apt-get update
 # apt-get update && apt-get upgrade -y
 apt install -y nvidia-driver nvidia-smi

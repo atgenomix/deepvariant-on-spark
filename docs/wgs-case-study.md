@@ -45,7 +45,7 @@ to install DeeopVariant-on-Spark.
 One simple command to run the whole pipeline.
 
 ```
-bash ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH output	bash ./deepvariant-on-spark/scripts/run.sh gs://deepvariant/case-study-testdata/HG002_NIST_150bp_50x.bam 19 GRCH output
+bash ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH output
 ```
 
 ##### Note

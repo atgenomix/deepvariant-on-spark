@@ -45,7 +45,18 @@ to install DeeopVariant-on-Spark.
 One simple command to run the whole pipeline.
 
 ```
-bash ./deepvariant-on-spark/scripts/run.sh gs://deepvariant/case-study-testdata/HG002_NIST_150bp_50x.bam 19 GRCH output
+bash ./deepvariant-on-spark/scripts/run.sh gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam 19 GRCH output	bash ./deepvariant-on-spark/scripts/run.sh gs://deepvariant/case-study-testdata/HG002_NIST_150bp_50x.bam 19 GRCH output
+```
+
+##### Note
+SeqPiper CAN NOT process the BAM file (gs://deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam)
+provided from DeepVariant team since the file is generated from old HTSLib
+and caused the parsing error by Apache ADAM. Therefore, we use Samtools
+to regenerate the new BAM by the following command and put into our
+Google Storage Bucket (gs://seqslab-deepvariant/case-study/input/data/HG002_NIST_150bp_50x.bam).
+
+```
+samtools view -h old.bam | samtools viewe -Sb - > new.bam
 ```
 
 ### Usage

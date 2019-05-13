@@ -143,5 +143,14 @@ print_time "postprocess_variants" ${T4} ${T5}
 
 exit 0
 
+##########################################3##############################################
+# merge_vcf
 
+zcat 000.vcf.gz | grep ^# >> head.vcf
+zcat *.vcf.gz | grep -v ^# >> merge.vcf
+grep -w "PASS" merge.vcf >> merge-pass.vcf
+cat head.vcf merge-pass.vcf >> final.vcf
+# rm -rf head.vcf merge.vcf merge-pass.vcf
+
+#########################################################################################
 #python3 get_variants.py ${postprocess_variants_dir}

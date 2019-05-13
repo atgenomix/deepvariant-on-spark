@@ -146,8 +146,8 @@ exit 0
 ##########################################3##############################################
 # merge_vcf
 
-hadoop fs -text 000.vcf.gz | grep ^# >> head.vcf
-hadoop fs -text *.vcf.gz | grep -v ^# | grep -w "PASS" >> merge-pass.vcf
+hadoop fs -text /output/vcf/000.vcf.gz | grep ^# >> head.vcf
+hadoop fs -text /output/vcf/*.vcf.gz | grep -v ^# | grep -w "PASS" >> merge-pass.vcf
 cat head.vcf merge-pass.vcf >> final.vcf
 # rm -rf head.vcf merge-pass.vcf
 

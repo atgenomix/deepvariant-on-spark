@@ -133,7 +133,14 @@ if [[ $? != 0 ]]; then
   print_time "call_variants" ${T3} ${T4}
   exit -1
 fi
+########################################################################################
+# merge_vcf
 
+hadoop fs -text ${postprocess_variants_out}/000.vcf.gz | grep ^# >> head.vcf
+hadoop fs -text ${postprocess_variants_out}/*.vcf.gz | grep -v ^# | grep -w "PASS" >> merge-pass.vcf
+cat head.vcf merge-pass.vcf >> final.vcf
+# rm -rf head.vcf merge-pass.vcf
+########################################################################################
 T5=$(date +%s)
 print_time "transform_data" ${T0} ${T1}
 print_time "select_bam" ${T1} ${T2}
@@ -142,14 +149,6 @@ print_time "call_variants" ${T3} ${T4}
 print_time "postprocess_variants" ${T4} ${T5}
 
 exit 0
-
-##########################################3##############################################
-# merge_vcf
-
-hadoop fs -text /output/vcf/000.vcf.gz | grep ^# >> head.vcf
-hadoop fs -text /output/vcf/*.vcf.gz | grep -v ^# | grep -w "PASS" >> merge-pass.vcf
-cat head.vcf merge-pass.vcf >> final.vcf
-# rm -rf head.vcf merge-pass.vcf
 
 #########################################################################################
 #python3 get_variants.py ${postprocess_variants_dir}

@@ -133,15 +133,16 @@ if [[ $? != 0 ]]; then
   print_time "call_variants" ${T3} ${T4}
   exit -1
 fi
+T5=$(date +%s)
+
 ########################################################################################
 # merge_vcf
-
 hadoop fs -text ${postprocess_variants_out}/000.vcf.gz | grep ^# >> head.vcf
 hadoop fs -text ${postprocess_variants_out}/*.vcf.gz | grep -v ^# | grep -w "PASS" >> merge-pass.vcf
 cat head.vcf merge-pass.vcf >> final.vcf
 # rm -rf head.vcf merge-pass.vcf
 ########################################################################################
-T5=$(date +%s)
+
 print_time "transform_data" ${T0} ${T1}
 print_time "select_bam" ${T1} ${T2}
 print_time "make_examples" ${T2} ${T3}

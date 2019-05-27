@@ -83,7 +83,7 @@
       - "{{ ref_version }}"
 
     - name: copy parallelization.bed
-      shell: hadoop fs -cp gs://dataproc-3b095611-db2b-4155-8021-a922552cb1aa-us/bed/"{{ item }}"/contiguous_unmasked_regions_156_parts hdfs:///bed/"{{ item }}"/
+      shell: hadoop fs -cp gs://seqslab-deepvariant/bed/"{{ item }}"/contiguous_unmasked_regions_156_parts hdfs:///bed/"{{ item }}"/
       failed_when: false
       with_items:
       - "{{ ref_version }}"

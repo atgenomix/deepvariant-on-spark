@@ -28,7 +28,7 @@ apt-get install -y pciutils
 #  done
 #done
 sudo sed -i.bak 's/stretch[^ ]* main$/& contrib non-free/g' /etc/apt/sources.list
-sudo apt install linux-headers-$(uname -r)
+sudo apt -y install linux-headers-$(uname -r)
 apt update
 
 # Install proprietary NVIDIA Drivers and CUDA

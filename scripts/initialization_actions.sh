@@ -19,14 +19,16 @@ update_apt_get
 apt-get install -y pciutils
 # Add non-free Debian 9 Stretch packages.
 # See https://www.debian.org/distrib/packages#note
-for type in deb deb-src; do
-  for distro in stretch; do
-    for component in contrib non-free; do
-      echo "${type} http://deb.debian.org/debian/ ${distro} ${component}" \
-          >> /etc/apt/sources.list.d/non-free.list
-    done
-  done
-done
+#for type in deb deb-src; do
+#  for distro in stretch; do
+#    for component in contrib non-free; do
+#      echo "${type} http://deb.debian.org/debian/ ${distro} ${component}" \
+#          >> /etc/apt/sources.list.d/non-free.list
+#    done
+#  done
+#done
+sudo sed -i.bak 's/stretch[^ ]* main$/& contrib non-free/g' /etc/apt/sources.list
+sudo apt -y install linux-headers-$(uname -r)
 apt update
 
 # Install proprietary NVIDIA Drivers and CUDA

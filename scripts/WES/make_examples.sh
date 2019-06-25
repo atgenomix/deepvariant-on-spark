@@ -91,7 +91,7 @@ ${spark} \
       --reference-system ${contig_style} \
       --platform-type illumina \
       --java-mem-in-mb 5120 \
-      --target-interval-path /seqslab/system/target_interval/${ref_version}/${target_interval}
+      --target-interval-path hdfs:///target_interval/${ref_version}/${target_interval}
 
 
 if [[ $? != 0 ]]; then

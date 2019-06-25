@@ -26,7 +26,7 @@ num_vcores=`curl http://localhost:8088/ws/v1/cluster/metrics | \
 num_nodes=`curl http://localhost:8088/ws/v1/cluster/metrics | \
             python -c "import sys, json; print json.load(sys.stdin)['clusterMetrics']['totalNodes']"`
 dirname=`dirname $0`
-exom_path=/seqslab/system/target_interval/${ref_version}/${target_interval}
+exom_path=hdfs:///target_interval/${ref_version}/${target_interval}
 
 # functions
 #########################################################################################
@@ -37,7 +37,7 @@ usage() {
   echo $'\t' "<Input BAM>: the input bam file from Google Strorage or HDFS"
   echo $'\t' "<Reference Version>: [ 19 | 38 ]"
   echo $'\t' "<Contig Style>: [ HG | GRCH ]"
-  echo $'\t' "<Exom Kit>
+  echo $'\t' "<Exom Kit>"
   echo $'\t' "<Output Folder>: the output folder on HDFS"
   echo $'\t' "GVCF: the gvcf will be generated if enabled"
   echo "Examples: "

@@ -57,7 +57,7 @@ fi
 
 extra_params=" \\\" \\\" "
 
-if [[ $# -eq 7 ]]; then
+if [[ $# -eq 8 ]]; then
   extra_params="\\\" --gvcf_outfile ${gvcf_out} \\\" "
 fi
 

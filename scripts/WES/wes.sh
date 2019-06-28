@@ -19,7 +19,7 @@ alignment_bam=hdfs:///$output_folder/alignment.bam
 make_examples_out=hdfs:///$output_folder/examples
 call_variants_out=hdfs:///$output_folder/variants
 postprocess_variants_out=hdfs:///$output_folder/vcf
-bed_path=hdfs:///bed/${ref_version}/bed_chromosome
+bed_path=hdfs:///bed/${ref_version}/bed${ref_version}_chromosome
 executor_vcores=2
 num_vcores=`curl http://localhost:8088/ws/v1/cluster/metrics | \
             python -c "import sys, json; print json.load(sys.stdin)['clusterMetrics']['totalVirtualCores']"`

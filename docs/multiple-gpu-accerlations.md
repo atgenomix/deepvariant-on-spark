@@ -33,18 +33,6 @@ Using [the same command](blob/master/docs/wgs-case-study.md#run-a-wgs-sample-fro
 
 ### Quick Start
 
-If you don't want to run the whole pipeline, you have to download the
-output of `make_examples` for HG002_NIST_150bp_50x.bam. The data is
-available on gs://seqslab-deepvariant/case-study/output/examples/*.gz
-and all of necessary data will be settled by the commands.
-
-```
-mkdir examples
-gsutil -m cp -r gs://seqslab-deepvariant/case-study/output/examples/* examples/
-hadoop fs -mkdir -p /output/examples
-hadoop fs -put examples/*.gz /output/examples/
-```
-
 Since GPU acceleration is only leveraged by `call_variants` among the
 whole pipeline, you can use the following command to execute this step
 directly.
